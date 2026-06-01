@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title> CicloManos </title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family: Arial;
+  background:#f5f5f5;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+/* TOPO */
+.topo{
+  background:#f5f5f5;
+  display:flex;
+  justify-content:space-around;
+  padding:8px;
+  font-size:12px;
+}
+
+.topo a:hover{
+  color:#e60000;
+}
+
+/* HEADER */
+.meio-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:15px 40px;
+  background:white;
+}
+
+.logo{
+  height:120px;
+}
+
+.busca{
+  display:flex;
+  width:40%;
+}
+
+.busca input{
+  width:100%;
+  padding:10px;
+  border:1px solid #ccc;
+  border-radius:5px 0 0 5px;
+}
+
+.busca button{
+  padding:10px 20px;
+  border:none;
+  background:#4A86B8;
+  color:white;
+  border-radius:0 5px 5px 0;
+  cursor:pointer;
+}
+
+.usuario a{
+  display:block;
+  margin:3px 0;
+}
+
+.usuario a:hover{
+  color:#4A86B8;
+}
+
+/* MENU */
+.menu{
+  background:#4A86B8;
+  color:white;
+  display:flex;
+  align-items:center;
+  padding:10px 40px;
+  gap:20px;
+}
+
+.menu nav a{
+  margin:0 10px;
+}
+
+.menu nav a:hover{
+  text-decoration:underline;
+}
+
+
+.departamentos{
+  background:#3f719b;
+  color:white;
+  padding:10px 15px;
+  border-radius:5px;
+}
+
+
+.banner{
+  height:400px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:white;
+}
+
+.banner img{
+  max-height:100%;
+  max-width:100%;
+}
+
+
+.titulo{
+  text-align:center;
+  margin:30px;
+}
+
+.produtos{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+  gap:25px;
+  padding:20px 40px;
+}
+
+.card{
+  background:white;
+  border-radius:10px;
+  padding:15px;
+  text-align:center;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  transition:0.3s;
+  height:300px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+}
+
+.card img{
+  width:100%;
+  height:140px;
+  object-fit:contain;
+}
+
+.preco{
+  color:#e60023;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+
+footer{
+  background:#111;
+  color:white;
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+}
+
+</style>
+</head>
+
+<br>
+<font color = "#FFFACD">
+    <h1> Preencha o formulário abaixo </h1></br>
+</font>
+
+<form action="" method="post" color="red">
+<fieldset width=700>
+
+<br> 
+    
+<font color="#FFFAFA">
+<legend><b> Dados Pessoais <b></legend>
+<br>
+<font color="#FFFAFA">
+nome:
+</font>
+ <input type="text" name="nome" size="40" placeholder="digite seu nome"> <p>
+<label>
+<font color="#FFFAFA">
+e-mail <input type="text" name="endereco" size="50" placeholder="digite seu e-mail">
+</label> <p>
+<label>
+<font color="#FFFAFA">
+senha: <input type="password" name="senha" maxlength="6" size="5">
+</label><p>
+<font color="#FFFAFA"></font>
+
+<br>
+  <br>
+
+Qual autor brasileiro você escolheria? (Escolher somente um) <br>
+
+<p>
+<input type="radio" name="livro" value="">
+ Machado de Assis <br>
+</p>
+
+<p>
+<input type="radio" name="livro" value="">
+ Clarice Lispector <br>
+</p>
+
+<p>
+<input type="radio" name="lvro" value="">
+ Jorge Amado <br>
+</p>
+
+<p>
+<input type="radio" name="lvro" value="">
+ Graciliano Ramos <br>
+</p>
+
+<br>
+
+<br>
+
+Qual livro que gostária de ler? <br>
+
+<p>
+<input type="checkbox" name="livro" value="A Hora da Estrela"> A Hora da Estrela — Sensível e profundo. <br>
+</p>
+
+<p>
+<input type="checkbox" name="livro" value="O Auto da Compadecida"> O Auto da Compadecida — Divertido e genial. <br>
+</p>
+
+<p>
+<input type="checkbox" name="livro" value="Vidas Secas"> Vidas Secas — Emocionante e marcante <br>
+</p>
+
+<p>
+<input type="checkbox" name="livro" value="Meu Pé de Laranja Lima"> Meu Pé de Laranja Lima — Emocionante. <br>
+</p>
+
+<p>
+<input type="checkbox" name="livro" value="O Cortiço"> O Cortiço — Retrato forte da sociedade brasileira. <br>
+</p>
+
+
+<br>
+
+Qual seu genêro literário favorito? <br>
+<select name="livro" >
+<option value="Romance"> Romance </option>
+<option value="Drama"> Drama </option>
+<option value="Comédia"> Comédia </option>
+<option value="Terror"> Terror </option>
+<option value="" selected>  </option>
+
+
+</select><p>
+
+<br>
+
+Tem alguma indicação de livro? <br>
+<textarea name="obs" cols="60" rows="10" placeholder="Escreva aqui"></textarea>
+<p>
+
+<input type="submit" value="Enviar Formulário">
+<input type="reset" value="Limpar">
+
+</fieldset>
+
+</center>
+
+
+</form>
+</body>
+</html>
