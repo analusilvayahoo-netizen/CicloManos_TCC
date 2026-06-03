@@ -177,37 +177,34 @@ footer{
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     
-    $conn = mysqli_connect("localhost", "root", "", "ciclomanos_db");
+    $conn = mysqli_connect("localhost", "root", "", "ciclomanos");
 
     
     if ($conn) {
         
        
-        $nome          = mysqli_real_escape_string($conn, $_POST['nome_produto']);
+        $nome          = mysqli_real_escape_string($conn, $_POST['name']);
+        $descricao     = mysqli_real_escape_string($conn, $_POST['descricao']);
+        $imagem        = mysqli_real_escape_string($conn, $_POST['imagem']);
         $marca         = mysqli_real_escape_string($conn, $_POST['marca']);
         $modelo        = mysqli_real_escape_string($conn, $_POST['modelo']);
-        $preco_custo   = mysqli_real_escape_string($conn, $_POST['preco_custo']);
         $preco_venda   = mysqli_real_escape_string($conn, $_POST['preco_venda']);
-        $margem_lucro  = mysqli_real_escape_string($conn, $_POST['margem_lucro']);
         $qtd_atual     = mysqli_real_escape_string($conn, $_POST['qtd_atual']);
-        $estoque_min   = mysqli_real_escape_string($conn, $_POST['estoque_minimo']);
+        $estoque_minimo   = mysqli_real_escape_string($conn, $_POST['estoque_minimo']);
         $cat_principal = mysqli_real_escape_string($conn, $_POST['categoria_principal']);
-        $subcategoria  = mysqli_real_escape_string($conn, $_POST['subcategoria']);
         $modalidade    = mysqli_real_escape_string($conn, $_POST['modalidade']);
         $tamanho_aro   = mysqli_real_escape_string($conn, $_POST['tamanho_aro']);
         $material      = mysqli_real_escape_string($conn, $_POST['material']);
         $cor           = mysqli_real_escape_string($conn, $_POST['cor']);
-        $condicao      = mysqli_real_escape_string($conn, $_POST['condicao']);
-
         
         $sql = "INSERT INTO cicloprodutos (
-                    produto, marca, modelo, preco_custo, preco_venda, margem_lucro, 
-                    qtd_atual, estoque_minimo, categoria_principal, subcategoria, 
-                    modalidade, tamanho_aro, material, cor, condicao
+                    produto, descricao, imagem, marca, modelo, preco_venda,
+                    qtd_atual, estoque_minimo, categoria_principal, 
+                    modalidade, tamanho_aro, material, cor 
                 ) VALUES (
-                    '$nome', '$marca', '$modelo', '$preco_custo', '$preco_venda', '$margem_lucro', 
-                    '$qtd_atual', '$estoque_min', '$cat_principal', '$subcategoria', 
-                    '$modalidade', '$tamanho_aro', '$material', '$cor', '$condicao'
+                    '$nome', '$descricao', '$imagem', '$marca', '$modelo', '$preco_venda', 
+                    '$qtd_atual', '$estoque_minimo', '$categoria_principal', 
+                    '$modalidade', '$tamanho_aro', '$material', '$cor'
                 )";
 
  

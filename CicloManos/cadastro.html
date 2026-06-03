@@ -6,167 +6,89 @@
 
 <style>
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+.form-container{
+  max-width: 850px;
+  margin: 40px auto;
+  background: white;
+  padding: 35px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 
-body{
-  font-family: Arial;
-  background:#f5f5f5;
+.form-container h1{
+  text-align: center;
+  color: #4A86B8;
+  margin-bottom: 25px;
 }
 
-a{
-  text-decoration:none;
-  color:inherit;
+fieldset{
+  border: 2px solid #4A86B8;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
 }
 
-/* TOPO */
-.topo{
-  background:#f5f5f5;
-  display:flex;
-  justify-content:space-around;
-  padding:8px;
-  font-size:12px;
+legend{
+  color: #4A86B8;
+  font-weight: bold;
+  padding: 0 10px;
 }
 
-.topo a:hover{
-  color:#e60000;
+label{
+  display: block;
+  margin-top: 12px;
+  color: #333;
+  font-weight: bold;
 }
 
-/* HEADER */
-.meio-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:15px 40px;
-  background:white;
+input[type="text"]{
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: 0.3s;
 }
 
-.logo{
-  height:120px;
+input[type="text"]:focus{
+  outline: none;
+  border-color: #4A86B8;
+  box-shadow: 0 0 8px rgba(74,134,184,0.3);
 }
 
-.busca{
-  display:flex;
-  width:40%;
+.botoes{
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
 }
 
-.busca input{
-  width:100%;
-  padding:10px;
-  border:1px solid #ccc;
-  border-radius:5px 0 0 5px;
+input[type="submit"],
+input[type="reset"]{
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+  transition: 0.3s;
 }
 
-.busca button{
-  padding:10px 20px;
-  border:none;
-  background:#4A86B8;
-  color:white;
-  border-radius:0 5px 5px 0;
-  cursor:pointer;
+input[type="submit"]{
+  background: #4A86B8;
 }
 
-.usuario a{
-  display:block;
-  margin:3px 0;
+input[type="submit"]:hover{
+  background: #3a709c;
 }
 
-.usuario a:hover{
-  color:#4A86B8;
+input[type="reset"]{
+  background: #e60023;
 }
 
-/* MENU */
-.menu{
-  background:#4A86B8;
-  color:white;
-  display:flex;
-  align-items:center;
-  padding:10px 40px;
-  gap:20px;
-}
-
-.menu nav a{
-  margin:0 10px;
-}
-
-.menu nav a:hover{
-  text-decoration:underline;
-}
-
-
-.departamentos{
-  background:#3f719b;
-  color:white;
-  padding:10px 15px;
-  border-radius:5px;
-}
-
-
-.banner{
-  height:400px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:white;
-}
-
-.banner img{
-  max-height:100%;
-  max-width:100%;
-}
-
-
-.titulo{
-  text-align:center;
-  margin:30px;
-}
-
-.produtos{
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
-  gap:25px;
-  padding:20px 40px;
-}
-
-.card{
-  background:white;
-  border-radius:10px;
-  padding:15px;
-  text-align:center;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
-  transition:0.3s;
-  height:300px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-}
-
-.card:hover{
-  transform:translateY(-5px);
-}
-
-.card img{
-  width:100%;
-  height:140px;
-  object-fit:contain;
-}
-
-.preco{
-  color:#e60023;
-  font-weight:bold;
-  margin-top:10px;
-}
-
-
-footer{
-  background:#111;
-  color:white;
-  text-align:center;
-  padding:20px;
-  margin-top:40px;
+input[type="reset"]:hover{
+  background: #c4001d;
 }
 
 </style>
@@ -178,11 +100,15 @@ footer{
 <br>
    <br>
 
+<div class="form-container">
 
+  <a href="ciclomanos.html">
+    <img src="tcc/logo.jpg" class="logo">
+  </a>
 
 <br>
 <font color = "black">
-    <h1> Preencha o formulário abaixo </h1></br>
+    <h1> Cadastro de Produto </h1>
 </font>
 
 <form action="cadastro.php" method="post" color="red">
@@ -194,17 +120,28 @@ footer{
 <legend><b> Informações Básicas do Produto <b></legend>
 <br>
 
+
 <font color="black">
-Nome do Produto:
+Produto:
 </font>
  <input type="text" name="name" size="40" placeholder=""> <p>
 <label>
 <font color="black">
-Marca: <input type="text" name="name" size="50" placeholder="">
+Descrição:
+</font>
+ <input type="text" name="descricao" size="40" placeholder=""> <p>
+<label>
+<font color="black">
+Imagem:
+</font>
+ <input type="text" name="imagem" size="40" placeholder=""> <p>
+<label>
+<font color="black">
+Marca: <input type="text" name="marca" size="50" placeholder="">
 </label> <p>
 <label>
 <font color="black">
-Modelo: <input type="name" name="Modelo" size="40" placeholder="">
+Modelo: <input type="name" name="modelo" size="40" placeholder="">
 </label><p>
   <br>
 
@@ -215,7 +152,7 @@ Modelo: <input type="name" name="Modelo" size="40" placeholder="">
 <font color="black">
 Preço de Venda:
 </font>
- <input type="text" name="name" size="20" placeholder=""> <p>
+ <input type="text" name="preco_venda" size="20" placeholder=""> <p>
 <label>
 <br>
   <br>
@@ -227,12 +164,12 @@ Preço de Venda:
 <font color="black">
 Quantidade Atual:
 </font>
- <input type="text" name="name" size="20" placeholder=""> <p>
+ <input type="text" name="qtd_atual" size="20" placeholder=""> <p>
 <label>
 <font color="black">
 Estoque Mínimo:
 </font>
- <input type="text" name="name" size="20" placeholder=""> <p>
+ <input type="text" name="estoque_minimo" size="20" placeholder=""> <p>
 <label>
 <br>
   <br>
@@ -244,11 +181,11 @@ Estoque Mínimo:
 <font color="black">
 Categoria Principal:
 </font>
- <input type="text" name="name" size="20" placeholder=""> <p>
+ <input type="text" name="categoria_principal" size="20" placeholder=""> <p>
 <label>
 Modalidade:
 </font>
- <input type="text" name="name" size="20" placeholder=""> <p>
+ <input type="text" name="modalidade" size="20" placeholder=""> <p>
 <label>
 <br>
   <br>
@@ -260,16 +197,16 @@ Modalidade:
 <font color="black">
 Tamanho/Aro:
 </font>
- <input type="text" name="name" size="20" placeholder=""> <p>
+ <input type="text" name="tamanho_aro" size="20" placeholder=""> <p>
 <label>
 <font color="black">
 Material:
 </font>
- <input type="text" name="name" size="20" placeholder=""> <p>
+ <input type="text" name="material" size="20" placeholder=""> <p>
 <label>
 Cor:
 </font>
- <input type="text" name="name" size="25" placeholder=""> <p>
+ <input type="text" name="cor" size="25" placeholder=""> <p>
 <label>
 <br>
   <br>
@@ -281,8 +218,10 @@ Cor:
 
 
 
-<p><input type="submit" value="Enviar Cadastro "></p>
-<p><input type="reset" value="Limpar"></p>
+<div class="botoes">
+    <input type="submit" value="Enviar Cadastro">
+    <input type="reset" value="Limpar">
+</div>
 
 <br>
 
