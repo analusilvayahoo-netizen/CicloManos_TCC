@@ -189,7 +189,7 @@ footer{
 
 <div class="meio-header">
 
-  <a href="ciclomanos.html">
+  <a href="ciclomanos.php">
     <img src="tcc/logo.jpg" class="logo">
   </a>
 
@@ -255,35 +255,45 @@ echo "<div class='row'>";
 
 
 
-
-while($row = mysqli_fetch_assoc($result)) {
-
-
-
+while($row = mysqli_fetch_assoc($result)){
 
 echo "
 
 <div class='col-12 col-md-6 col-lg-3 mb-4'>
 
- <div class='card h-100 shadow-sm'>
+<a href='produtos.php?id=".$row['id']."' style='text-decoration:none;color:inherit;'>
 
- <img src='".$row['imagem']."' class='card-img-top' alt='Imagem do produto'>
+<div class='card h-100 shadow-sm'>
 
- <div class='card-body d-flex flex-column'>
+<img src='".$row['imagem']."'
+     class='card-img-top'
+     alt='Imagem do produto'>
+
+<div class='card-body d-flex flex-column'>
+
 <h5 class='card-title'>".$row['produto']."</h5>
 
- <p class='card-text'>".$row['descricao']."</p>
+<p class='card-text'>".$row['descricao']."</p>
 
- <div class='mt-auto'>
-<a href='#' class='btn btn-primary w-100'>R$ ".$row['preco_venda']."</a>
+<div class='mt-auto'>
 
- </div>
+<button class='btn btn-primary w-100'>
+R$ ".$row['preco_venda']."
+</button>
+
 </div>
+
 </div>
-</div>";
 
+</div>
 
- }
+</a>
+
+</div>
+
+";
+
+}
 
 
 echo "</div>"; 
