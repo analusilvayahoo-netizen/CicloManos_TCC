@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Pneu Aro 26</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Arial;background:#f5f5f5;}
+a{text-decoration:none;color:inherit;}
+
+.topo{background:#f5f5f5;display:flex;justify-content:space-around;padding:8px;font-size:12px;}
+.meio-header{display:flex;justify-content:space-between;align-items:center;padding:15px 40px;background:white;}
+.logo{height:80px;}
+
+.busca{display:flex;width:40%;}
+.busca input{width:100%;padding:10px;border:1px solid #ccc;border-radius:5px 0 0 5px;}
+.busca button{background:#4A86B8;color:white;border:none;padding:10px;border-radius:0 5px 5px 0;}
+
+.menu{background:#4A86B8;color:white;padding:10px 40px;}
+.menu a{margin-right:15px;}
+
+.produto{display:flex;gap:40px;padding:40px;background:white;margin:30px;border-radius:10px;}
+.imagem img{width:400px;}
+.preco{color:#e60023;font-size:28px;margin:10px 0;}
+.botao{background:#2e7d32;color:white;padding:15px;border:none;width:100%;cursor:pointer;}
+
+.descricao{background:white;margin:30px;padding:20px;border-radius:10px;}
+
+.cards{display:flex;gap:20px;margin:30px;}
+.card{background:white;padding:15px;border-radius:10px;width:180px;text-align:center;}
+.card img{width:100%;height:120px;object-fit:contain;}
+</style>
+</head>
+
+<body>
+
+<div class="topo">
+  <a href="#">📍 Rastreie seu pedido</a>
+  <a href="#">💬 Fale conosco</a>
+</div>
+
+<div class="meio-header">
+  <a href="ciclomanos.html"><img src="https://i.pinimg.com/736x/88/99/99/889999c134977d6379c48cea6a4ff373.jpg" class="logo"></a>
+
+  <div class="busca">
+    <input placeholder="Buscar">
+    <button>Buscar</button>
+  </div>
+
+  <div>
+    <a href="#">👤 Conta</a><br>
+    <a href="carrinho.html">🛒 Carrinho</a>
+  </div>
+</div>
+
+<div class="menu">
+  <a href="#">Acessórios</a>
+  <a href="#">Bicicletas</a>
+  <a href="#">Peças</a>
+</div>
+
+<div class="produto">
+  <div class="imagem"><img src="tcc/aro26.jpg"></div>
+
+  <div>
+    <h2>Pneu Aro 26</h2>
+    <div class="preco">R$ 55,00</div>
+
+    <input type="number" value="1"><br><br>
+
+    <button class="botao" onclick="comprar()">Comprar</button>
+  </div>
+</div>
+
+<div class="descricao">
+  <h3>Descrição</h3>
+  Pneu aro 26 reforçado<br>
+  Ideal para MTB e uso urbano<br>
+  Alta resistência<br>
+  Excelente desempenho
+</div>
+
+<div class="cards">
+
+<a href="pneu24.html">
+<div class="card"><img src="tcc/aro24.jpg"><p>ARO 24</p><strong>R$ 55,00</strong></div>
+</a>
+
+<a href="pneu29.html">
+<div class="card"><img src="tcc/aro29.jpg"><p>ARO 29</p><strong>R$ 80,00</strong></div>
+</a>
+
+<a href="pneu20.html">
+<div class="card"><img src="tcc/aro20.jpg"><p>ARO 20</p><strong>R$ 50,00</strong></div>
+</a>
+
+</div>
+
+<script>
+function comprar(){
+  alert("Produto adicionado ao carrinho!");
+  window.location.href="carrinho.html";
+}
+</script>
+
+</body>
+</html>
+```
