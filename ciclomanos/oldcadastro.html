@@ -1,54 +1,3 @@
-<?php
-
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
-    
-    $conn = mysqli_connect("localhost", "root", "", "ciclomanos");
-
-    
-    if ($conn) {
-        
-       
-        $nome          = mysqli_real_escape_string($conn, $_POST['name']);
-        $descricao     = mysqli_real_escape_string($conn, $_POST['descricao']);
-        $imagem        = mysqli_real_escape_string($conn, $_POST['imagem']);
-        $id_marca = mysqli_real_escape_string($conn, $_POST['id_marca']);
-        $modelo        = mysqli_real_escape_string($conn, $_POST['modelo']);
-        $preco_venda   = mysqli_real_escape_string($conn, $_POST['preco_venda']);
-        $qtd_atual     = mysqli_real_escape_string($conn, $_POST['qtd_atual']);
-        $estoque_minimo   = mysqli_real_escape_string($conn, $_POST['estoque_minimo']);
-        $id_categoria = mysqli_real_escape_string($conn, $_POST['id_categoria']);
-        $modalidade    = mysqli_real_escape_string($conn, $_POST['modalidade']);
-        $tamanho_aro   = mysqli_real_escape_string($conn, $_POST['tamanho_aro']);
-        $material      = mysqli_real_escape_string($conn, $_POST['material']);
-        $cor           = mysqli_real_escape_string($conn, $_POST['cor']);
-        
-        $sql = "INSERT INTO cicloprodutos (
-                    produto, descricao, imagem, id_marca, modelo, preco_venda,
-                    qtd_atual, estoque_minimo, id_categoria,
-                    modalidade, tamanho_aro, material, cor 
-                ) VALUES (
-                    '$nome', '$descricao', '$imagem', '$id_marca', '$modelo', '$preco_venda', 
-                    '$qtd_atual', '$estoque_minimo', '$id_categoria', 
-                    '$modalidade', '$tamanho_aro', '$material', '$cor'
-                )";
-
- 
-        if (mysqli_query($conn, $sql)) {
-            echo "<p style='color: green;'> Produto cadastrado com sucesso! </p>";
-        } else {
-            echo "<p style='color: red;'> Erro ao cadastrar: " . mysqli_error($conn) . "</p>";
-        }
-
-
-        mysqli_close($conn);
-    }
-}
-?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -188,11 +137,11 @@ Imagem:
  <input type="text" name="imagem" size="40" placeholder=""> <p>
 <label>
 <font color="black">
-ID da Marca: <input type="text" name="id_marca" size="40" required> <p>
+Marca: <input type="text" name="marca" size="50" placeholder="">
 </label> <p>
 <label>
 <font color="black"> 
-Modelo: <input type="text" name="modelo" size="40" placeholder=""> <p>
+Modelo: <input type="name" name="modelo" size="40" placeholder="">
 </label> <p>
 
 
@@ -234,7 +183,7 @@ Estoque Mínimo:
 <font color="black">
 Categoria Principal:
 </font>
- <input type="text" name="id_categoria" size="40" required> <p>
+ <input type="text" name="categoria_principal" size="20" placeholder=""> <p>
 <label>
 Modalidade:
 </font>
@@ -264,15 +213,72 @@ Cor:
 <br>
   <br>
 
-<div class="botoes">
-  <input type="submit" value="Cadastrar">
-  <input type="reset" value="Limpar">
-</div>
+
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $conn = mysqli_connect("localhost", "root", "", "ciclomanos");
+
+    if ($conn) {
+        $nome = mysqli_real_escape_string($conn, $_POST['name']);
+        $descricao = mysqli_real_escape_string($conn, $_POST['descricao']);
+        $imagem = mysqli_real_escape_string($conn, $_POST['imagem']);
+        $id_marca = mysqli_real_escape_string($conn, $_POST['id_marca']);
+        $modelo = mysqli_real_escape_string($conn, $_POST['modelo']);
+        $preco_venda = mysqli_real_escape_string($conn, $_POST['preco_venda']);
+        $qtd_atual = mysqli_real_escape_string($conn, $_POST['qtd_atual']);
+        $estoque_minimo = mysqli_real_escape_string($conn, $_POST['estoque_minimo']);
+        $id_categoria = mysqli_real_escape_string($conn, $_POST['id_categoria']);
+        $modalidade = mysqli_real_escape_string($conn, $_POST['modalidade']);
+        $tamanho_aro = mysqli_real_escape_string($conn, $_POST['tamanho_aro']);
+        $material = mysqli_real_escape_string($conn, $_POST['material']);
+        $cor = mysqli_real_escape_string($conn, $_POST['cor']);
+
+        $sql = "INSERT INTO cicloprodutos (
+                    produto, descricao, imagem, id_marca, modelo, preco_venda,
+                    qtd_atual, estoque_minimo, id_categoria,
+                    modalidade, tamanho_aro, material, cor
+                ) VALUES (
+                    '$nome', '$descricao', '$imagem', '$id_marca', '$modelo', '$preco_venda',
+                    '$qtd_atual', '$estoque_minimo', '$id_categoria',
+                    '$modalidade', '$tamanho_aro', '$material', '$cor'
+                )";
+
+        if (mysqli_query($conn, $sql)) {
+            echo "<p style='color: green;'>Produto cadastrado com sucesso!</p>";
+        } else {
+            echo "<p style='color: red;'>Erro ao cadastrar: " . mysqli_error($conn) . "</p>";
+        }
+
+        mysqli_close($conn);
+    }
+}
+?>
+
+<form method="POST" action="">
+    <input type="text" name="name" placeholder="Nome do produto">
+    <input type="text" name="descricao" placeholder="Descrição">
+    <input type="text" name="imagem" placeholder="Imagem">
+    <input type="number" name="id_marca" placeholder="ID da marca">
+    <input type="text" name="modelo" placeholder="Modelo">
+    <input type="text" name="preco_venda" placeholder="Preço">
+    <input type="number" name="qtd_atual" placeholder="Quantidade atual">
+    <input type="number" name="estoque_minimo" placeholder="Estoque mínimo">
+    <input type="number" name="id_categoria" placeholder="ID da categoria">
+    <input type="number" name="modalidade" placeholder="Modalidade">
+    <input type="number" name="tamanho_aro" placeholder="Tamanho do aro">
+    <input type="number" name="material" placeholder="Material">
+    <input type="number" name="cor" placeholder="Cor">
+
+    <button type="submit">Cadastrar produto</button>
+</form>
+
+<br>
 
 </fieldset>
-</form>
-</div>
+
 </center>
 
+
+</form>
 </body>
 </html>
