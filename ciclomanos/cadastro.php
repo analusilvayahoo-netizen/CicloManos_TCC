@@ -25,7 +25,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $tamanho_aro   = mysqli_real_escape_string($conn, $_POST['tamanho_aro']);
         $material      = mysqli_real_escape_string($conn, $_POST['material']);
         $cor           = mysqli_real_escape_string($conn, $_POST['cor']);
-        
+
+
+
         $sql = "INSERT INTO cicloprodutos (
                     produto, descricao, imagem, id_marca, modelo, preco_venda,
                     qtd_atual, estoque_minimo, id_categoria,

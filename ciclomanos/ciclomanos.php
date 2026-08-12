@@ -22,8 +22,8 @@ include 'config.php';
 <div class="topo">
   <a href="#">📍 Rastreie seu pedido</a>
   <a href="#">💬 Fale conosco</a>
-  <span>📱 WhatsApp: (12) 99999-0000</span>
-  <span>📞 Telefone: (12) 3721-0000</span>
+  <span>📱 WhatsApp: (12) 3916-3262</span>
+  <span>📞 Telefone: (12) 3916-3262</span>
 </div>
 
 <div class="meio-header">
