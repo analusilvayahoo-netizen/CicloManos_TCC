@@ -52,7 +52,7 @@ include 'config.php';
     <a href="acessorios.html">Acessórios</a>
     <a href="bicicletas.html">Bicicletas</a>
     <a href="pecas.html">Peças</a>
-    <a href="manutencao.html">Manutenção</a>
+    <a href="manutencao.php"> Manutenção </a>
     <a href="ofertas.html">Ofertas</a>
   </nav>
 
