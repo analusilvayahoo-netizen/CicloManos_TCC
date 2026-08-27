@@ -1,0 +1,278 @@
+<?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
+    
+    $conn = mysqli_connect("localhost", "root", "", "ciclomanos");
+
+    
+    if ($conn) {
+        
+       
+        $nome          = mysqli_real_escape_string($conn, $_POST['name']);
+        $descricao     = mysqli_real_escape_string($conn, $_POST['descricao']);
+        $imagem        = mysqli_real_escape_string($conn, $_POST['imagem']);
+        $id_marca = mysqli_real_escape_string($conn, $_POST['id_marca']);
+        $modelo        = mysqli_real_escape_string($conn, $_POST['modelo']);
+        $preco_venda   = mysqli_real_escape_string($conn, $_POST['preco_venda']);
+        $qtd_atual     = mysqli_real_escape_string($conn, $_POST['qtd_atual']);
+        $estoque_minimo   = mysqli_real_escape_string($conn, $_POST['estoque_minimo']);
+        $id_categoria = mysqli_real_escape_string($conn, $_POST['id_categoria']);
+        $modalidade    = mysqli_real_escape_string($conn, $_POST['modalidade']);
+        $tamanho_aro   = mysqli_real_escape_string($conn, $_POST['tamanho_aro']);
+        $material      = mysqli_real_escape_string($conn, $_POST['material']);
+        $cor           = mysqli_real_escape_string($conn, $_POST['cor']);
+        
+        $sql = "INSERT INTO cicloprodutos (
+                    produto, descricao, imagem, id_marca, modelo, preco_venda,
+                    qtd_atual, estoque_minimo, id_categoria,
+                    modalidade, tamanho_aro, material, cor 
+                ) VALUES (
+                    '$nome', '$descricao', '$imagem', '$id_marca', '$modelo', '$preco_venda', 
+                    '$qtd_atual', '$estoque_minimo', '$id_categoria', 
+                    '$modalidade', '$tamanho_aro', '$material', '$cor'
+                )";
+
+ 
+        if (mysqli_query($conn, $sql)) {
+            echo "<p style='color: green;'> Produto cadastrado com sucesso! </p>";
+        } else {
+            echo "<p style='color: red;'> Erro ao cadastrar: " . mysqli_error($conn) . "</p>";
+        }
+
+
+        mysqli_close($conn);
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title> CicloManos </title>
+
+<style>
+
+.form-container{
+  max-width: 850px;
+  margin: 40px auto;
+  background: white;
+  padding: 35px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.form-container h1{
+  text-align: center;
+  color: #4A86B8;
+  margin-bottom: 25px;
+}
+
+fieldset{
+  border: 2px solid #4A86B8;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
+}
+
+legend{
+  color: #4A86B8;
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+label{
+  display: block;
+  margin-top: 12px;
+  color: #333;
+  font-weight: bold;
+}
+
+input[type="text"]{
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+input[type="text"]:focus{
+  outline: none;
+  border-color: #4A86B8;
+  box-shadow: 0 0 8px rgba(74,134,184,0.3);
+}
+
+.botoes{
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+input[type="submit"],
+input[type="reset"]{
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+  transition: 0.3s;
+}
+
+input[type="submit"]{
+  background: #4A86B8;
+}
+
+input[type="submit"]:hover{
+  background: #3a709c;
+}
+
+input[type="reset"]{
+  background: #e60023;
+}
+
+input[type="reset"]:hover{
+  background: #c4001d;
+}
+
+</style>
+</head>
+<body>
+
+<center>
+
+<br>
+   <br>
+
+<div class="form-container">
+
+  <a href="ciclomanos.html">
+    <img src="tcc/logo.jpg" class="logo">
+  </a>
+
+<br>
+<font color = "black">
+    <h1> Cadastro de Produto </h1>
+</font>
+
+<form action="cadastro.php" method="post" color="red">
+<fieldset width=700>
+
+<br> 
+    
+<font color="black">
+<legend><b> Informações Básicas do Produto <b></legend>
+<br>
+
+
+<font color="black">
+Produto:
+</font>
+ <input type="text" name="name" size="40" placeholder=""> <p>
+<label>
+<font color="black">
+Descrição:
+</font>
+ <input type="text" name="descricao" size="40" placeholder=""> <p>
+<label>
+<font color="black">
+Imagem:
+</font>
+ <input type="text" name="imagem" size="40" placeholder=""> <p>
+<label>
+<font color="black">
+ID da Marca: <input type="text" name="id_marca" size="40" required> <p>
+</label> <p>
+<label>
+<font color="black"> 
+Modelo: <input type="text" name="modelo" size="40" placeholder=""> <p>
+</label> <p>
+
+
+  <br>
+
+<font color="black">
+<legend> Preço do Produto </legend>
+<br>
+
+<font color="black">
+Preço de Venda:
+</font>
+ <input type="text" name="preco_venda" size="20" placeholder=""> <p>
+<label>
+<br>
+  <br>
+
+<font color="black">
+<legend> Controle de Estoque </legend>
+<br>
+
+<font color="black">
+Quantidade Atual:
+</font>
+ <input type="text" name="qtd_atual" size="20" placeholder=""> <p>
+<label>
+<font color="black">
+Estoque Mínimo:
+</font>
+ <input type="text" name="estoque_minimo" size="20" placeholder=""> <p>
+<label>
+<br>
+  <br>
+
+<font color="black">
+<legend> Categorização </legend>
+<br>
+
+<font color="black">
+Categoria Principal:
+</font>
+ <input type="text" name="id_categoria" size="40" required> <p>
+<label>
+Modalidade:
+</font>
+ <input type="text" name="modalidade" size="20" placeholder=""> <p>
+<label>
+<br>
+  <br>
+
+<font color="black">
+<legend> Atributos Técnicos </legend>
+<br>
+
+<font color="black">
+Tamanho/Aro:
+</font>
+ <input type="text" name="tamanho_aro" size="20" placeholder=""> <p>
+<label>
+<font color="black">
+Material:
+</font>
+ <input type="text" name="material" size="20" placeholder=""> <p>
+<label>
+Cor:
+</font>
+ <input type="text" name="cor" size="25" placeholder=""> <p>
+<label>
+<br>
+  <br>
+
+<div class="botoes">
+  <input type="submit" value="Cadastrar">
+  <input type="reset" value="Limpar">
+</div>
+
+</fieldset>
+</form>
+</div>
+</center>
+
+</body>
+</html>

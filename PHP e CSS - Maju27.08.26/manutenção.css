@@ -1,0 +1,334 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* =========================
+   TOPO
+========================= */
+
+.topo {
+    background: #f5f5f5;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px;
+    font-size: 12px;
+}
+
+.topo a:hover {
+    color: #4A86B8;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.meio-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 40px;
+    background: white;
+}
+
+.logo {
+    height: 120px;
+}
+
+/* =========================
+   BARRA DE BUSCA
+========================= */
+
+.busca {
+    display: flex;
+    width: 40%;
+}
+
+.busca input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+}
+
+.busca button {
+    padding: 10px 20px;
+    border: none;
+    background: #4A86B8;
+    color: white;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+.busca button:hover {
+    background: #3f719b;
+}
+
+/* =========================
+   USUÁRIO
+========================= */
+
+.usuario a {
+    display: block;
+    margin: 3px 0;
+}
+
+.usuario a:hover {
+    color: #4A86B8;
+}
+
+/* =========================
+   MENU
+========================= */
+
+.menu {
+    background: #4A86B8;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 10px 40px;
+    gap: 20px;
+}
+
+.menu nav a {
+    margin: 0 10px;
+}
+
+.menu nav a:hover {
+    text-decoration: underline;
+}
+
+/* =========================
+   DEPARTAMENTOS
+========================= */
+
+.departamentos {
+    background: #3f719b;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.departamentos:hover {
+    background: #345f83;
+}
+
+/* =========================
+   TÍTULO
+========================= */
+
+.titulo {
+    text-align: center;
+    margin: 30px;
+    font-size: 40px;
+}
+
+/* =========================
+   ÁREA DE RASTREIO
+========================= */
+
+.rastreio {
+    background: white;
+    width: 650px;
+    max-width: 90%;
+    margin: 30px auto 50px;
+    padding: 35px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.rastreio p {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+/* =========================
+   CAMPO DO CÓDIGO
+========================= */
+
+#codigo {
+    width: 80%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+}
+
+#codigo:focus {
+    border-color: #4A86B8;
+}
+
+/* =========================
+   BOTÃO ACOMPANHAR
+========================= */
+
+.rastreio > button {
+    margin-top: 15px;
+    padding: 12px 25px;
+    border: none;
+    background: #4A86B8;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.rastreio > button:hover {
+    background: #3f719b;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status {
+    display: none;
+    margin-top: 35px;
+    padding-top: 25px;
+    border-top: 1px solid #ddd;
+}
+
+.status h3 {
+    margin-bottom: 25px;
+    font-size: 22px;
+}
+
+/* =========================
+   ETAPAS
+========================= */
+
+.etapas {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+.etapas::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    right: 5%;
+    height: 4px;
+    background: #ccc;
+    transform: translateY(-50%);
+    z-index: 0;
+}
+
+.etapa {
+    position: relative;
+    z-index: 1;
+
+    width: 120px;
+    min-height: 65px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px;
+
+    background: #eee;
+    color: #777;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    transition: 0.3s;
+}
+
+.etapa.ativa {
+    background: #4A86B8;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(74, 134, 184, 0.4);
+}
+
+/* =========================
+   RODAPÉ
+========================= */
+
+footer {
+    background: #111;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* =========================
+   RESPONSIVIDADE
+========================= */
+
+@media (max-width: 700px) {
+
+    .meio-header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .busca {
+        width: 90%;
+    }
+
+    .menu {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .menu nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .titulo {
+        font-size: 30px;
+    }
+
+    .rastreio {
+        padding: 25px 15px;
+    }
+
+    .etapas {
+        flex-direction: column;
+    }
+
+    .etapas::before {
+        top: 5%;
+        bottom: 5%;
+        left: 50%;
+        width: 4px;
+        height: auto;
+        right: auto;
+        transform: translateX(-50%);
+    }
+
+    .etapa {
+        width: 180px;
+    }
+}
