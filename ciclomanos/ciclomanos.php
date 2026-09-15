@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 include 'config.php';
 
 ?>
@@ -38,8 +40,8 @@ include 'config.php';
   </div>
 
   <div class="usuario">
-    <a href="#">👤 Conta</a>
-    <a href="#">🛒 Carrinho</a>
+    <a href="login.php">👤 Conta</a>
+    <a href="carrinho.php">🛒 Carrinho</a>
   </div>
 
 </div>
@@ -95,33 +97,56 @@ echo "
 
 <div class='col-12 col-md-6 col-lg-3 mb-4'>
 
-<a href='produtos.php?id=".$row['id']."' style='text-decoration:none;color:inherit;'>
-
 <div class='card h-100 shadow-sm'>
+
+<a href='produtos.php?id=".$row['id']."' 
+   style='text-decoration:none;color:inherit;'>
 
 <img src='".$row['imagem']."'
      class='card-img-top'
      alt='Imagem do produto'>
 
-<div class='card-body d-flex flex-column'>
+<div class='card-body'>
 
-<h5 class='card-title'>".$row['produto']."</h5>
+<h5 class='card-title'>
+    ".$row['produto']."
+</h5>
 
-<p class='card-text'>".$row['descricao']."</p>
-
-<div class='mt-auto'>
-
-<button class='btn btn-primary w-100'>
-R$ ".$row['preco_venda']."
-</button>
-
-</div>
-
-</div>
+<p class='card-text'>
+    ".$row['descricao']."
+</p>
 
 </div>
 
 </a>
+
+<div class='card-body pt-0 mt-auto'>
+
+<p class='fw-bold text-primary fs-5'>
+    R$ ".number_format($row['preco_venda'], 2, ',', '.')."
+</p>
+
+<form method='POST' action='carrinho.php'>
+
+<input
+    type='hidden'
+    name='id'
+    value='".$row['id']."'
+>
+
+<button
+    type='submit'
+    name='adicionar'
+    class='btn btn-primary w-100'
+>
+    🛒 Adicionar ao carrinho
+</button>
+
+</form>
+
+</div>
+
+</div>
 
 </div>
 
