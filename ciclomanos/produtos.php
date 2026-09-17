@@ -223,9 +223,9 @@ $produto = mysqli_fetch_assoc($result);
 
 <br>        
 
-        <form action="carrinho.php" method="post" class="mt-4">
-          <input type="hidden" name="id" value="<?= (int)$produto['id']; ?>">
-          <button class="btn btn-success btn-lg w-100">
+        <form action="carrinho.php" method="POST" class="mt-4">
+          <input type="hidden" name="id" value="<?php echo $produto['id']; ?>">
+          <button type = "submit" class="btn btn-success btn-lg w-100" name="adicionar"                                                       >
             🛒 Adicionar ao Carrinho
           </button>
         </form>

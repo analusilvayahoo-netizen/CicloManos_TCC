@@ -220,8 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                      * pela página da área do cliente.
                      */
 
-                    header('Location: ciclomanos.php');
-                    exit;
+                    
 
 
                 } else {

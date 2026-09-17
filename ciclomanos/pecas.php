@@ -11,7 +11,7 @@ include 'config.php';
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Peças - CicloManos</title>
+<title> Peças - CicloManos </title>
 
 <style>
 
