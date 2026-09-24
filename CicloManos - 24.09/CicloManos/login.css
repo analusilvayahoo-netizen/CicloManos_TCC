@@ -1,0 +1,418 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    background: #f5f5f5;
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+
+.topo {
+    background: #f5f5f5;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    padding: 8px;
+
+    font-size: 12px;
+    color: #333;
+}
+
+.topo a:hover {
+    color: #4A86B8;
+}
+
+
+
+.meio-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 15px 40px;
+
+    background: white;
+}
+
+.logo {
+    height: 90px;
+    width: auto;
+}
+
+.usuario a {
+    display: block;
+
+    margin: 5px 0;
+
+    color: #333;
+}
+
+.usuario a:hover {
+    color: #4A86B8;
+}
+
+
+
+.menu {
+    background: #4A86B8;
+    color: white;
+
+    display: flex;
+    align-items: center;
+
+    padding: 10px 40px;
+
+    gap: 20px;
+}
+
+.menu nav a {
+    margin: 0 10px;
+}
+
+.menu nav a:hover {
+    text-decoration: underline;
+}
+
+.departamentos {
+    background: #3f719b;
+    color: white;
+
+    padding: 10px 15px;
+
+    border-radius: 5px;
+}
+
+
+
+.login-area {
+    min-height: calc(100vh - 190px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 50px 20px;
+}
+
+.container-login {
+    width: 900px;
+    max-width: 100%;
+    min-height: 500px;
+
+    display: flex;
+
+    background: white;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+
+.welcome {
+    width: 42%;
+
+    background: #4A86B8;
+    color: white;
+
+    padding: 50px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.welcome h1 {
+    font-size: 38px;
+    margin-bottom: 20px;
+}
+
+.welcome p {
+    font-size: 16px;
+
+    line-height: 1.7;
+
+    color: #f5f5f5;
+}
+
+.welcome .linha {
+    width: 60px;
+    height: 4px;
+
+    background: white;
+
+    border-radius: 5px;
+
+    margin: 20px 0;
+}
+
+
+
+.forms {
+    width: 58%;
+
+    padding: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form {
+    width: 100%;
+    max-width: 420px;
+}
+
+.form h2 {
+    color: #333;
+
+    font-size: 30px;
+
+    margin-bottom: 30px;
+}
+
+.form-subtitulo {
+    color: #777;
+
+    font-size: 14px;
+
+    margin-top: -20px;
+    margin-bottom: 25px;
+}
+
+.input-group {
+    margin-bottom: 18px;
+}
+
+.input-group label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #444;
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+.input-group input {
+    width: 100%;
+
+    padding: 13px 14px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 5px;
+
+    outline: none;
+
+    font-size: 15px;
+
+    transition: 0.2s;
+}
+
+.input-group input:focus {
+    border-color: #4A86B8;
+
+    box-shadow:
+        0 0 0 3px rgba(74, 134, 184, 0.15);
+}
+
+
+/* =========================
+   BOTÃO
+========================= */
+
+.button {
+    width: 100%;
+
+    padding: 13px;
+
+    border: none;
+
+    border-radius: 5px;
+
+    background: #4A86B8;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+    margin-top: 8px;
+}
+
+.button:hover {
+    background: #3f719b;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================
+   TROCA LOGIN / CADASTRO
+========================= */
+
+.switch {
+    text-align: center;
+
+    margin-top: 22px;
+
+    color: #777;
+
+    font-size: 14px;
+}
+
+.switch a {
+    color: #4A86B8;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.switch a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================
+   MENSAGENS
+========================= */
+
+.message {
+    margin-top: 15px;
+
+    text-align: center;
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+
+/* Cadastro escondido inicialmente */
+
+#registerForm {
+    display: none;
+}
+
+
+/* =========================
+   RODAPÉ
+========================= */
+
+footer {
+    background: #111;
+
+    color: white;
+
+    text-align: center;
+
+    padding: 20px;
+}
+
+footer p {
+    margin: 0;
+}
+
+
+/* =========================
+   RESPONSIVIDADE
+========================= */
+
+@media (max-width: 700px) {
+
+    .topo {
+        display: none;
+    }
+
+
+    .meio-header {
+        justify-content: center;
+
+        padding: 15px;
+    }
+
+
+    .logo {
+        height: 75px;
+    }
+
+
+    .usuario {
+        display: none;
+    }
+
+
+    .menu {
+        justify-content: center;
+
+        padding: 10px;
+    }
+
+
+    .menu nav {
+        display: none;
+    }
+
+
+    .container-login {
+        flex-direction: column;
+    }
+
+
+    .welcome,
+    .forms {
+        width: 100%;
+    }
+
+
+    .welcome {
+        padding: 35px;
+
+        text-align: center;
+    }
+
+
+    .welcome h1 {
+        font-size: 30px;
+    }
+
+
+    .welcome .linha {
+        margin: 20px auto;
+    }
+
+
+    .forms {
+        padding: 35px 25px;
+    }
+
+
+    .login-area {
+        padding: 25px 15px;
+    }
+
+}
