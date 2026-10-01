@@ -151,89 +151,101 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     } elseif (isset($_POST['login'])) {
 
-        $email = strtolower(
-            trim((string)($_POST['loginEmail'] ?? ''))
-        );
-
+        $email = strtolower(trim((string)($_POST['loginEmail'] ?? '')));
         $senha = (string)($_POST['loginPassword'] ?? '');
 
-
         if ($email === '' || $senha === '') {
-
-            $loginMessage =
-                'Preencha o e-mail e a senha.';
-
-
+            $loginMessage = 'Preencha o e-mail e a senha.';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
-            $loginMessage =
-                'Digite um e-mail válido.';
-
-
+            $loginMessage = 'Digite um e-mail válido.';
         } else {
-
             try {
-
                 $q = $pdo->prepare(
-                    'SELECT
-                        u.id_usuario,
-                        u.senha_hash,
-                        d.nome
+                    'SELECT u.id_usuario, u.id_dado, u.senha_hash, d.nome
                      FROM usuarios u
-                     INNER JOIN dados_pessoais d
-                        ON d.id_dado = u.id_dado
+                     INNER JOIN dados_pessoais d ON d.id_dado = u.id_dado
                      WHERE d.email = :email
                      LIMIT 1'
                 );
 
-                $q->execute([
-                    'email' => $email
-                ]);
-
+                $q->execute(['email' => $email]);
                 $usuario = $q->fetch();
 
-
-                if (
-                    $usuario &&
-                    password_verify(
-                        $senha,
-                        $usuario['senha_hash']
-                    )
-                ) {
-
+                if (!$usuario || !password_verify($senha, $usuario['senha_hash'])) {
+                    $loginMessage = 'E-mail ou senha incorretos.';
+                } else {
                     session_regenerate_id(true);
 
-                    $_SESSION['id_usuario'] =
-                        (int)$usuario['id_usuario'];
+                    $_SESSION['id_usuario'] = (int)$usuario['id_usuario'];
+                    $_SESSION['nome_usuario'] = $usuario['nome'];
+                    $_SESSION['email_usuario'] = $email;
 
-                    $_SESSION['nome_usuario'] =
-                        $usuario['nome'];
+                    $idDado = (int)$usuario['id_dado'];
+                    $dominioFuncionario = '@ciclomanos.com';
 
-                    $_SESSION['email_usuario'] =
-                        $email;
+                    /* Funcionário: o domínio do e-mail determina o tipo esperado. */
+                    if (str_ends_with($email, $dominioFuncionario)) {
 
+                        $qFuncionario = $pdo->prepare(
+                            'SELECT id_funcionario, cargo
+                             FROM funcionarios
+                             WHERE id_dado = :id_dado
+                             LIMIT 1'
+                        );
 
-                    /*
-                     * LOGIN REALIZADO
-                     *
-                     * Depois você pode trocar esse endereço
-                     * pela página da área do cliente.
-                     */
+                        $qFuncionario->execute(['id_dado' => $idDado]);
+                        $funcionario = $qFuncionario->fetch();
 
-                    
+                        if (!$funcionario) {
+                            unset(
+                                $_SESSION['id_usuario'],
+                                $_SESSION['nome_usuario'],
+                                $_SESSION['email_usuario']
+                            );
 
+                            $loginMessage = 'Conta de funcionário não cadastrada.';
+                        } else {
+                            $_SESSION['tipo_usuario'] = 'funcionario';
+                            $_SESSION['id_funcionario'] = (int)$funcionario['id_funcionario'];
+                            $_SESSION['cargo_funcionario'] = $funcionario['cargo'];
 
-                } else {
+                            header('Location: painel_funcionario.php');
+                            exit;
+                        }
 
-                    $loginMessage =
-                        'E-mail ou senha incorretos.';
+                    /* Cliente: qualquer outro domínio procura a conta em clientes. */
+                    } else {
+
+                        $qCliente = $pdo->prepare(
+                            'SELECT id_cliente
+                             FROM clientes
+                             WHERE id_dado = :id_dado
+                             LIMIT 1'
+                        );
+
+                        $qCliente->execute(['id_dado' => $idDado]);
+                        $cliente = $qCliente->fetch();
+
+                        if (!$cliente) {
+                            unset(
+                                $_SESSION['id_usuario'],
+                                $_SESSION['nome_usuario'],
+                                $_SESSION['email_usuario']
+                            );
+
+                            $loginMessage = 'Conta de cliente não cadastrada.';
+                        } else {
+                            $_SESSION['tipo_usuario'] = 'cliente';
+                            $_SESSION['id_cliente'] = (int)$cliente['id_cliente'];
+
+                            header('Location: index.php');
+                            exit;
+                        }
+                    }
                 }
 
-
             } catch (PDOException $erro) {
-
-                $loginMessage =
-                    'Erro ao realizar o login. Verifique o banco de dados.';
+                $loginMessage = 'Erro ao realizar o login. Verifique o banco de dados.';
             }
         }
 
@@ -315,6 +327,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $registerMessage =
                 'Digite um e-mail válido.';
+
+
+        } elseif (str_ends_with($email, '@ciclomanos.com')) {
+
+            $registerMessage =
+                'E-mails @ciclomanos.com são exclusivos para funcionários.';
 
 
         } elseif (!cpfValido($cpf)) {
@@ -447,9 +465,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $q = $pdo->prepare(
                     'INSERT INTO usuarios
-                    (id_dado, senha_hash)
+                    (id_dado, senha_hash, tipo)
                     VALUES
-                    (:dado, :senha)'
+                    (:dado, :senha, 0)'
                 );
 
                 $q->execute([
@@ -538,108 +556,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         href="login.css"
     >
 
+    <style>
+        html,
+        body {
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-area {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .container-login {
+            margin: 30px auto;
+        }
+
+        footer {
+            margin-top: auto;
+            width: 100%;
+        }
+    </style>
+
 </head>
 
 
 <body>
-
-
-<!-- =====================================================
-     TOPO
-     ===================================================== -->
-
-<div class="topo">
-
-    <a href="#">
-        📍 Rastreie seu pedido
-    </a>
-
-    <a href="#">
-        💬 Fale conosco
-    </a>
-
-    <span>
-        📱 WhatsApp: (12) 3916-3262
-    </span>
-
-    <span>
-        📞 Telefone: (12) 3916-3262
-    </span>
-
-</div>
-
-
-<!-- =====================================================
-     HEADER
-     ===================================================== -->
-
-<div class="meio-header">
-
-    <a href="ciclomanos.php">
-
-        <img
-            src="fotos/logo.jpg"
-            class="logo"
-            alt="CicloManos"
-        >
-
-    </a>
-
-
-    <div class="usuario">
-
-        <a href="login.php">
-            👤 Conta
-        </a>
-
-        <a href="#">
-            🛒 Carrinho
-        </a>
-
-    </div>
-
-</div>
-
-
-<!-- =====================================================
-     MENU
-     ===================================================== -->
-
-<div class="menu">
-
-    <a
-        href="departamentos.html"
-        class="departamentos"
-    >
-        ☰ Departamentos
-    </a>
-
-
-    <nav>
-
-        <a href="acessorios.html">
-            Acessórios
-        </a>
-
-        <a href="bicicletas.html">
-            Bicicletas
-        </a>
-
-        <a href="pecas.html">
-            Peças
-        </a>
-
-        <a href="manutencao.html">
-            Manutenção
-        </a>
-
-        <a href="ofertas.html">
-            Ofertas
-        </a>
-
-    </nav>
-
-</div>
 
 
 <!-- =====================================================

@@ -328,9 +328,25 @@ include 'config.php';
 
         <div class="usuario">
 
-            <a href="login.php">
-                👤 Conta
-            </a>
+            <?php if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] === 'funcionario'): ?>
+
+                <a href="painel_funcionario.php">
+                    👤 <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Funcionário') ?>
+                </a>
+
+            <?php elseif (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] === 'cliente'): ?>
+
+                <a href="index.php">
+                    👤 Olá, <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Cliente') ?>
+                </a>
+
+            <?php else: ?>
+
+                <a href="login.php">
+                    👤 Conta
+                </a>
+
+            <?php endif; ?>
 
             <a href="carrinho.php">
                 🛒 Carrinho
@@ -384,7 +400,7 @@ include 'config.php';
                 Manutenção
             </a>
 
-            <a href="ofertas.html">
+            <a href="ofertas.php">
                 Ofertas
             </a>
 

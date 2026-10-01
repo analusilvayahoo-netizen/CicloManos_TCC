@@ -1,285 +1,479 @@
 <?php
-
 session_start();
 
-include 'config.php';
+require_once 'config.php';
 
+if (!isset($conn) && isset($conexao)) {
+    $conn = $conexao;
+}
+
+if (!$conn) {
+    die("Erro: Conexão com a base de dados não encontrada. Verifique o seu config.php.");
+}
 ?>
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-<meta charset="UTF-8">
-<title> Peças - CicloManos </title>
+    <meta charset="UTF-8">
+    <title>Peças - CicloManos</title>
 
-<style>
+    <link rel="stylesheet" href="style.css">
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        crossorigin="anonymous">
 
-body{
-  font-family: Arial;
-  background:#f5f5f5;
-}
+    <style>
+        /* =========================
+           BARRA SUPERIOR (CINZA CLARO)
+        ========================= */
+        .topo-cinza {
+            background-color: #f2f2f2 !important;
+            color: #333333 !important;
+            padding: 8px 20px !important;
+            display: flex !important;
+            justify-content: space-around !important;
+            align-items: center !important;
+            font-size: 14px !important;
+            width: 100% !important;
+        }
 
-a{
-  text-decoration:none;
-  color:inherit;
-}
+        .topo-cinza a,
+        .topo-cinza span {
+            color: #333333 !important;
+            text-decoration: none !important;
+            font-weight: 500;
+        }
 
-/* TOPO */
-.topo{
-  background:#f5f5f5;
-  display:flex;
-  justify-content:space-around;
-  padding:8px;
-  font-size:12px;
-}
+        .topo-cinza a:hover {
+            opacity: 0.8;
+            text-decoration: underline !important;
+        }
 
-.topo a:hover{
-  color:#e60000;
-}
+        /* =========================
+           MEIO HEADER (LOGO, BUSCA, CONTA/CARRINHO)
+        ========================= */
+        .meio-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 20px 0;
+            background-color: #ffffff;
+        }
 
-/* HEADER */
-.meio-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:15px 40px;
-  background:white;
-}
+        .meio-header .logo {
+            max-height: 55px;
+        }
 
-.logo{
-  height:120px;
-}
+        .meio-header .busca {
+            display: flex;
+            align-items: center;
+            width: 450px;
+        }
 
-.busca{
-  display:flex;
-  width:40%;
-}
+        .meio-header .busca input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+            outline: none;
+        }
 
-.busca input{
-  width:100%;
-  padding:10px;
-  border:1px solid #ccc;
-  border-radius:5px 0 0 5px;
-}
+        .meio-header .busca button {
+            background-color: #4b86b4;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
 
-.busca button{
-  padding:10px 20px;
-  border:none;
-  background:#4A86B8;
-  color:white;
-  border-radius:0 5px 5px 0;
-  cursor:pointer;
-}
+        /* ESTILO DA ÁREA CONTA E CARRINHO */
+        .usuario {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
 
-.usuario a{
-  display:block;
-  margin:3px 0;
-}
+        .usuario a {
+            color: #333333 !important;
+            text-decoration: none !important;
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-.usuario a:hover{
-  color:#4A86B8;
-}
+        .usuario a:hover {
+            color: #4b86b4 !important;
+        }
 
-/* MENU */
-.menu{
-  background:#4A86B8;
-  color:white;
-  display:flex;
-  align-items:center;
-  padding:10px 40px;
-  gap:20px;
-}
+        /* =========================
+           MENU PRINCIPAL (FAIXA AZUL)
+        ========================= */
+        .menu-bar {
+            background-color: #4b86b4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            padding: 12px 0;
+            color: #ffffff;
+            font-weight: bold;
+        }
 
-.menu nav a{
-  margin:0 10px;
-}
+        .produtos-menu {
+            position: relative;
+        }
 
-.menu nav a:hover{
-  text-decoration:underline;
-}
+        .botao-produtos {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-.departamentos{
-  background:#3f719b;
-  color:white;
-  padding:10px 15px;
-  border-radius:5px;
-}
+        .caixa-produtos {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 190px;
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.20);
+            z-index: 1000;
+            padding: 8px 0;
+        }
 
-/* BANNER */
-.banner{
-  height:400px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:white;
-}
+        .caixa-produtos.aberto {
+            display: block;
+        }
 
-.banner img{
-  max-height:100%;
-  max-width:100%;
-}
+        .caixa-produtos a {
+            display: block;
+            padding: 12px 18px;
+            color: #333 !important;
+            text-decoration: none !important;
+            font-size: 15px;
+            font-weight: normal;
+        }
 
-/* PRODUTOS */
-.titulo{
-  text-align:center;
-  margin:30px;
-}
+        .caixa-produtos a:hover {
+            background-color: #f5f5f5;
+            color: #4b86b4 !important;
+        }
 
-.produtos{
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
-  gap:25px;
-  padding:20px 40px;
-}
+        .menu-bar nav {
+            display: flex;
+            align-items: center;
+            gap: 35px;
+        }
 
-.card{
-  background:white;
-  border-radius:10px;
-  padding:15px;
-  text-align:center;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
-  transition:0.3s;
-  height:320px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-}
+        .menu-bar nav a {
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+        }
 
-.card:hover{
-  transform:translateY(-5px);
-}
+        /* =========================
+           BANNER CENTRAL (LOGO GRANDE)
+        ========================= */
+        .banner-central {
+            text-align: center;
+            padding: 50px 0 30px 0;
+        }
 
-.card img{
-  width:100%;
-  height:160px;
-  object-fit:contain;
-}
+        .banner-central img {
+            width: 100%;
+            max-width: 520px;
+            height: auto;
+        }
 
-.preco{
-  color:#e60023;
-  font-weight:bold;
-  margin-top:10px;
-}
+        /* =========================
+           CARDS DE PRODUTOS
+        ========================= */
+        .card-produto {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #ffffff;
+            transition: box-shadow 0.2s ease-in-out;
+        }
 
-/* FOOTER */
-footer{
-  background:#111;
-  color:white;
-  text-align:center;
-  padding:20px;
-  margin-top:40px;
-}
+        .card-produto:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
 
-</style>
+        .card-produto img {
+            height: 180px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+
+        .card-produto .titulo-produto {
+            font-size: 14px;
+            color: #333333;
+            min-height: 42px;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .card-produto .preco-produto {
+            color: #4b86b4;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .btn-carrinho {
+            background-color: #4b86b4 !important;
+            color: #ffffff !important;
+            border: none !important;
+            padding: 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            display: block;
+            width: 100%;
+            text-align: center;
+            text-decoration: none !important;
+            font-size: 14px;
+        }
+
+        .btn-carrinho:hover {
+            background-color: #3b6c95 !important;
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="topo">
-  <a href="#">📍 Rastreie seu pedido</a>
-  <a href="#">💬 Fale conosco</a>
-  <span>📱 WhatsApp: (12) 99999-0000</span>
-  <span>📞 Telefone: (12) 3721-0000</span>
-</div>
+    <!-- =========================
+         TOPO (FAIXA CINZA CLARO)
+    ========================= -->
+    <div class="topo-cinza">
 
-<div class="meio-header">
+        <a href="https://share.google/jYgrtVLyebEBGaqzt" target="_blank">
+            📍 Localização
+        </a>
 
-  <a href="ciclomanos.html">
-    <img src="https://i.pinimg.com/736x/88/99/99/889999c134977d6379c48cea6a4ff373.jpg" class="logo">
-  </a>
+        <a href="https://wa.me/551239163262?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20CicloManos%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank">
+            💬 Fale conosco
+        </a>
 
-  <div class="busca">
-    <input type="text" placeholder="Digite o que você procura">
-    <button>Buscar</button>
-  </div>
+        <a href="https://wa.me/551239163262" target="_blank">
+            📱 WhatsApp: (12) 3916-3262
+        </a>
 
-  <div class="usuario">
-    <a href="#">👤 Conta</a>
-    <a href="#">🛒 Carrinho</a>
-  </div>
+        <span>
+            📞 Telefone: (12) 3916-3262
+        </span>
 
-</div>
+    </div>
 
-<div class="menu">
-  <a href="departamentos.html" class="departamentos">☰ Departamentos</a>
+    <!-- =========================
+         CABEÇALHO
+    ========================= -->
+    <div class="meio-header">
 
-  <nav>
-    <a href="acessorios.html">Acessórios</a>
-    <a href="bicicletas.html">Bicicletas</a>
-    <a href="pecas.html">Peças</a>
-    <a href="manutencao.html">Manutenção</a>
-    <a href="ofertas.html">Ofertas</a>
-  </nav>
-</div>
+        <!-- LOGO -->
+        <a href="index.php">
+            <img src="tcc/logo.jpg" class="logo" alt="Logo CicloManos">
+        </a>
 
-<div class="banner">
-  <img src="tcc/logo.jpg">
-</div>
+        <!-- PESQUISA -->
+        <div class="busca">
+            <input type="text" placeholder="Digite o que você procura">
+            <button>Buscar</button>
+        </div>
 
-<h2 class="titulo">PEÇAS</h2>
+        <!-- CONTA E CARRINHO -->
+        <div class="usuario">
+            <a href="login.php">👤 Conta</a>
+            <a href="carrinho.php">🛒 Carrinho</a>
+        </div>
 
-<div class="produtos">
+    </div>
 
-<a href="#">
-<div class="card">
-<img src="https://cdn-icons-png.flaticon.com/512/2972/2972231.png">
-<h3>Corrente de Bike</h3>
-<p class="preco">R$ 45,00</p>
-</div>
-</a>
+    <!-- =========================
+         MENU PRINCIPAL (FAIXA AZUL)
+    ========================= -->
+    <div class="menu-bar">
 
-<a href="#">
-<div class="card">
-<img src="https://cdn-icons-png.flaticon.com/512/2972/2972219.png">
-<h3>Freio a Disco</h3>
-<p class="preco">R$ 120,00</p>
-</div>
-</a>
+        <!-- PRODUTOS -->
+        <div class="produtos-menu">
 
-<a href="#">
-<div class="card">
-<img src="https://cdn-icons-png.flaticon.com/512/2972/2972209.png">
-<h3>Câmbio Traseiro</h3>
-<p class="preco">R$ 180,00</p>
-</div>
-</a>
+            <button class="botao-produtos" onclick="abrirProdutos()">
+                ☰ Produtos
+            </button>
 
-<a href="#">
-<div class="card">
-<img src="https://cdn-icons-png.flaticon.com/512/2972/2972213.png">
-<h3>Pedivela</h3>
-<p class="preco">R$ 150,00</p>
-</div>
-</a>
+            <!-- CAIXA DROP-DOWN -->
+            <div id="caixa-produtos" class="caixa-produtos">
 
-<a href="#">
-<div class="card">
-<img src="https://cdn-icons-png.flaticon.com/512/2972/2972205.png">
-<h3>Guidão Bike</h3>
-<p class="preco">R$ 90,00</p>
-</div>
-</a>
+                <a href="acessorios.php">Acessórios</a>
 
-<a href="#">
-<div class="card">
-<img src="https://cdn-icons-png.flaticon.com/512/2972/2972227.png">
-<h3>Selim Conforto</h3>
-<p class="preco">R$ 75,00</p>
-</div>
-</a>
+                <a href="pecas.php">Peças</a>
 
-</div>
+                <a href="bicicletas.php">Bicicletas</a>
 
-<footer>
-  <p>© 2026 CicloManos - Todos os direitos reservados</p>
-</footer>
+            </div>
+
+        </div>
+
+        <!-- OUTROS ITENS -->
+        <nav>
+            <a href="manutencao.php">Manutenção</a>
+            <a href="ofertas.php">Ofertas</a>
+        </nav>
+
+    </div>
+
+    <!-- =========================
+         BANNER CENTRAL (LOGO GRANDE)
+    ========================= -->
+    <div class="banner-central">
+
+        <img src="tcc/logo.jpg" alt="CicloManos">
+
+    </div>
+
+    <!-- =========================
+         VITRINE DE PEÇAS
+    ========================= -->
+    <div class="container mb-5">
+
+        <h2 class="text-center fw-bold mb-4">
+            Peças
+        </h2>
+
+        <?php
+
+        // Busca somente os produtos da categoria 3 - Peças
+        $sql = "SELECT * FROM cicloprodutos
+                WHERE id_categoria = 3";
+
+        $result = mysqli_query($conn, $sql);
+
+        if (!$result) {
+
+            echo "
+            <p class='alert alert-danger text-center'>
+                Erro ao buscar as peças: " . mysqli_error($conn) . "
+            </p>
+            ";
+
+        } else {
+
+            if (mysqli_num_rows($result) > 0) {
+
+                echo "<div class='row g-4'>";
+
+                while ($row = mysqli_fetch_assoc($result)) {
+
+                    echo "
+                    <div class='col-12 col-sm-6 col-md-4 col-lg-3'>
+
+                        <div class='card-produto h-100 d-flex flex-column justify-content-between text-center'>
+
+                            <a href='produtos.php?id=" . $row['id'] . "' style='text-decoration:none;'>
+
+                                <img src='" . htmlspecialchars($row['imagem']) . "' 
+                                     class='img-fluid' 
+                                     alt='" . htmlspecialchars($row['produto']) . "'>
+
+                                <div class='titulo-produto fw-semibold'>
+                                    " . htmlspecialchars($row['produto']) . "
+                                </div>
+
+                                <div class='preco-produto'>
+                                    R$ " . number_format($row['preco_venda'], 2, ',', '.') . "
+                                </div>
+
+                            </a>
+
+                            <a href='carrinho.php?acao=add&id=" . $row['id'] . "' 
+                               class='btn-carrinho mt-auto'>
+
+                                🛒 Colocar no carrinho
+
+                            </a>
+
+                        </div>
+
+                    </div>
+                    ";
+                }
+
+                echo "</div>";
+
+            } else {
+
+                echo "
+                <p class='alert alert-warning text-center'>
+                    Nenhuma peça encontrada.
+                </p>
+                ";
+            }
+        }
+
+        mysqli_close($conn);
+
+        ?>
+
+    </div>
+
+    <!-- =========================
+         RODAPÉ
+    ========================= -->
+    <footer class="mt-5 text-center p-3 bg-light border-top">
+
+        <p class="mb-0">
+            © <?= date('Y') ?> CicloManos - Todos os direitos reservados.
+        </p>
+
+    </footer>
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+    <script>
+
+        function abrirProdutos() {
+
+            const caixa = document.getElementById("caixa-produtos");
+
+            caixa.classList.toggle("aberto");
+
+        }
+
+        document.addEventListener("click", function(event) {
+
+            const produtosMenu = document.querySelector(".produtos-menu");
+
+            const caixa = document.getElementById("caixa-produtos");
+
+            if (produtosMenu && !produtosMenu.contains(event.target)) {
+
+                caixa.classList.remove("aberto");
+
+            }
+
+        });
+
+    </script>
 
 </body>
+
 </html>

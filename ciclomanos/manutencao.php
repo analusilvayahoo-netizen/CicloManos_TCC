@@ -73,9 +73,25 @@ function formatarData($data) { return $data ? date('d/m/Y', strtotime($data)) : 
 
 <body>
 
-  <div class="topo"><a href="manutencao.php">📍 Rastreie sua manutenção</a><a href="#">💬 Fale conosco</a><span>📱 WhatsApp: (12) 99999-0000</span><span>📞 Telefone: (12) 3721-0000</span></div>
-  <header class="meio-header"><a href="ciclomanos.html"><img src="https://i.pinimg.com/736x/88/99/99/889999c134977d6379c48cea6a4ff373.jpg" class="logo" alt="CicloManos"></a><div class="busca"><input type="text" placeholder="Digite o que você procura"><button type="button">Buscar</button></div><div class="usuario"><a href="#">👤 Conta</a><a href="#">🛒 Carrinho</a></div></header>
-  <div class="menu"><a href="departamentos.html" class="departamentos">☰ Departamentos</a><nav><a href="acessorios.html">Acessórios</a><a href="bicicletas.html">Bicicletas</a><a href="pecas.html">Peças</a><a href="manutencao.php">Manutenção</a><a href="ofertas.html">Ofertas</a></nav></div>
+  <div class="topo">
+    <a href="manutencao.php">📍 Rastreie sua manutenção</a>
+    <a href="#">💬 Fale conosco</a><span>📱 WhatsApp: (12) 99999-0000</span>
+    <span>📞 Telefone: (12) 3721-0000</span>
+  </div>
+
+  <header class="meio-header">
+    <a href="index.php">
+      <img src="https://i.pinimg.com/736x/88/99/99/889999c134977d6379c48cea6a4ff373.jpg" class="logo" alt="CicloManos"></a>
+      <div class="busca"><input type="text" placeholder="Digite o que você procura">
+      <button type="button">Buscar</button>
+    </div>
+      
+      <div class="usuario">
+        <a href="#">👤 Conta</a>
+        <a href="#">🛒 Carrinho</a></div>
+      </header>
+
+  <div class="menu"><a href="departamentos.html " class="departamentos">☰ Departamentos</a><nav><a href="acessorios.html">Acessórios</a><a href="bicicletas.html">Bicicletas</a><a href="pecas.html">Peças</a><a href="manutencao.php">Manutenção</a><a href="ofertas.html">Ofertas</a></nav></div>
   <h2 class="titulo">ACOMPANHE SUA MANUTENÇÃO</h2>
   <main class="rastreio">
     <p>Digite o código da sua manutenção:</p>

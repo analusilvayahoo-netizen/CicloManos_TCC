@@ -5,12 +5,77 @@ session_start();
 include 'config.php';
 
 
+/* =========================================================
+   INICIA O CARRINHO
+========================================================= */
 
 if (!isset($_SESSION['carrinho'])) {
     $_SESSION['carrinho'] = [];
 }
 
 
+/* =========================================================
+   ADICIONAR PRODUTO POR LINK
+========================================================= */
+
+if (isset($_GET['acao']) && $_GET['acao'] === 'add') {
+
+    $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
+    if ($id !== false && $id !== null) {
+
+        $sql = "
+            SELECT
+                id,
+                produto,
+                descricao,
+                imagem,
+                preco_venda
+            FROM cicloprodutos
+            WHERE id = ?
+        ";
+
+        $stmt = mysqli_prepare($conn, $sql);
+
+        if ($stmt) {
+
+            mysqli_stmt_bind_param($stmt, "i", $id);
+            mysqli_stmt_execute($stmt);
+
+            $resultado = mysqli_stmt_get_result($stmt);
+            $produto = mysqli_fetch_assoc($resultado);
+
+            if ($produto) {
+
+                if (isset($_SESSION['carrinho'][$id])) {
+
+                    $_SESSION['carrinho'][$id]['quantidade']++;
+
+                } else {
+
+                    $_SESSION['carrinho'][$id] = [
+                        'id' => (int)$produto['id'],
+                        'produto' => $produto['produto'],
+                        'descricao' => $produto['descricao'],
+                        'imagem' => $produto['imagem'],
+                        'preco' => (float)$produto['preco_venda'],
+                        'quantidade' => 1
+                    ];
+                }
+            }
+
+            mysqli_stmt_close($stmt);
+        }
+    }
+
+    header('Location: carrinho_corrigido.php');
+    exit;
+}
+
+
+/* =========================================================
+   ADICIONAR PRODUTO
+========================================================= */
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar'])) {
 
@@ -19,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar'])) {
         'id',
         FILTER_VALIDATE_INT
     );
-    
+
     if ($id !== false && $id !== null) {
 
         $sql = "
@@ -84,6 +149,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar'])) {
 }
 
 
+/* =========================================================
+   AUMENTAR QUANTIDADE
+========================================================= */
 
 if (
     $_SERVER['REQUEST_METHOD'] === 'POST'
@@ -112,6 +180,9 @@ if (
 }
 
 
+/* =========================================================
+   DIMINUIR QUANTIDADE
+========================================================= */
 
 if (
     $_SERVER['REQUEST_METHOD'] === 'POST'
@@ -146,6 +217,9 @@ if (
 }
 
 
+/* =========================================================
+   REMOVER
+========================================================= */
 
 if (
     $_SERVER['REQUEST_METHOD'] === 'POST'
@@ -173,6 +247,9 @@ if (
 }
 
 
+/* =========================================================
+   LIMPAR CARRINHO
+========================================================= */
 
 if (
     $_SERVER['REQUEST_METHOD'] === 'POST'
@@ -187,6 +264,9 @@ if (
 }
 
 
+/* =========================================================
+   TOTAL
+========================================================= */
 
 $total = 0;
 
@@ -250,7 +330,7 @@ foreach ($_SESSION['carrinho'] as $produto) {
 
 <div class="meio-header">
 
-<a href="ciclomanos.php">
+<a href="index.php">
 
 <img
     src="tcc/logo.jpg"
@@ -288,15 +368,15 @@ foreach ($_SESSION['carrinho'] as $produto) {
 
 <nav>
 
-<a href="acessorios.html">
+<a href="acessorios.php">
 Acessórios
 </a>
 
-<a href="bicicletas.html">
+<a href="bicicletas.php">
 Bicicletas
 </a>
 
-<a href="pecas.html">
+<a href="pecas.php">
 Peças
 </a>
 
@@ -304,7 +384,7 @@ Peças
 Manutenção
 </a>
 
-<a href="ofertas.html">
+<a href="ofertas.php">
 Ofertas
 </a>
 
@@ -337,7 +417,7 @@ Adicione produtos para começar sua compra.
 </p>
 
 <a
-    href="ciclomanos.php"
+    href="index.php"
     class="botao-comprar"
 >
 Continuar comprando

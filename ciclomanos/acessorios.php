@@ -6,6 +6,7 @@ include 'config.php';
 
 ?>
 
+<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
@@ -22,6 +23,7 @@ include 'config.php';
           crossorigin="anonymous">
 
 </head>
+
 
 <body>
 
@@ -58,7 +60,7 @@ include 'config.php';
 
     <!-- LOGO -->
 
-    <a href="ciclomanos.php">
+    <a href="index.php">
 
         <img
             src="tcc/logo.jpg"
@@ -89,9 +91,25 @@ include 'config.php';
 
     <div class="usuario">
 
-        <a href="login.php">
-            👤 Conta
-        </a>
+        <?php if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] === 'funcionario'): ?>
+
+            <a href="painel_funcionario.php">
+                👤 <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Funcionário') ?>
+            </a>
+
+        <?php elseif (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] === 'cliente'): ?>
+
+            <a href="index.php">
+                👤 Olá, <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Cliente') ?>
+            </a>
+
+        <?php else: ?>
+
+            <a href="login.php">
+                👤 Conta
+            </a>
+
+        <?php endif; ?>
 
         <a href="carrinho.php">
             🛒 Carrinho
@@ -154,6 +172,7 @@ include 'config.php';
 </div>
 
 
+
 <!-- =========================
      BANNER
 ========================= -->
@@ -169,164 +188,21 @@ include 'config.php';
 
 
 <!-- =========================
-     PRODUTOS
-========================= -->
-
-<div class="produtos">
-
-</div>
-
-
-<!-- =========================
-     VITRINE DE PRODUTOS
+     TÍTULO
 ========================= -->
 
 <div class="container mt-5">
 
     <h1 class="text-center mb-4">
-        Nossa Vitrine de Produtos
+        Acessórios
     </h1>
 
 
-<?php
-
-$sql = "SELECT * FROM cicloprodutos";
-
-$result = mysqli_query($conn, $sql);
-
-if (!$result) {
-
-    echo "
-
-    <p class='alert alert-danger'>
-
-        Erro ao buscar os produtos:
-
-        " . mysqli_error($conn) . "
-
-    </p>
-
-    ";
-
-} else {
-
-    if (mysqli_num_rows($result) > 0) {
-
-        echo "<div class='row'>";
-
-        while ($row = mysqli_fetch_assoc($result)) {
-
-            echo "
-
-            <div class='col-12 col-md-6 col-lg-3 mb-4'>
-
-                <div class='card h-100 shadow-sm'>
-
-                    <a
-                        href='produtos.php?id=" . $row['id'] . "'
-                        class='produto-link'
-                    >
-
-                        <img
-                            src='" . $row['imagem'] . "'
-                            class='card-img-top'
-                            alt='Imagem do produto'
-                        >
-
-                        <div class='card-body'>
-
-                            <h5 class='card-title'>
-
-                                " . $row['produto'] . "
-
-                            </h5>
-
-                            <p class='card-text'>
-
-                                " . $row['descricao'] . "
-
-                            </p>
-
-                        </div>
-
-                    </a>
+<!-- =========================
+     PRODUTOS
+========================= -->
 
 
-                    <div class='card-body pt-0 mt-auto'>
-
-                        <p class='fw-bold text-primary fs-5'>
-
-                            R$ "
-
-                            . number_format(
-                                $row['preco_venda'],
-                                2,
-                                ',',
-                                '.'
-                            )
-
-                            . "
-
-                        </p>
-
-
-                        <form
-                            method='POST'
-                            action='carrinho.php'
-                        >
-
-                            <input
-                                type='hidden'
-                                name='id'
-                                value='" . $row['id'] . "'
-                            >
-
-
-                            <button
-                                type='submit'
-                                name='adicionar'
-                                class='btn btn-primary w-100'
-                            >
-
-                                🛒 Adicionar ao carrinho
-
-                            </button>
-
-                        </form>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            ";
-
-        }
-
-        echo "</div>";
-
-    } else {
-
-        echo "
-
-        <p class='alert alert-warning'>
-
-            Nenhum produto encontrado.
-
-        </p>
-
-        ";
-
-    }
-
-}
-
-mysqli_close($conn);
-
-?>
-
-</div>
 
 
 <!-- =========================
@@ -352,17 +228,23 @@ mysqli_close($conn);
 
 function abrirProdutos() {
 
-    const caixa = document.getElementById("caixa-produtos");
+    const caixa =
+        document.getElementById("caixa-produtos");
 
     caixa.classList.toggle("aberto");
 
 }
 
+
+/* Fecha a caixa quando clicar fora */
+
 document.addEventListener("click", function(event) {
 
-    const produtosMenu = document.querySelector(".produtos-menu");
+    const produtosMenu =
+        document.querySelector(".produtos-menu");
 
-    const caixa = document.getElementById("caixa-produtos");
+    const caixa =
+        document.getElementById("caixa-produtos");
 
     if (!produtosMenu.contains(event.target)) {
 
