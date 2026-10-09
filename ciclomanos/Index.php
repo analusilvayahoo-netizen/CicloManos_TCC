@@ -2,16 +2,18 @@
 
 session_start();
 
-// 1. Incluir o ficheiro de configuração da base de dados
-require_once 'config.php';
+include 'config.php';
 
-// 2. Garantir que a variável de conexão existe
+/*
+ * Compatibilidade com diferentes nomes
+ * usados no arquivo config.php.
+ */
 if (!isset($conn) && isset($conexao)) {
     $conn = $conexao;
 }
 
-if (!$conn) {
-    die("Erro: Conexão com a base de dados não encontrada. Verifique o seu config.php.");
+if (!isset($conn) || !$conn) {
+    die("Erro: conexão com a base de dados não encontrada. Verifique o seu config.php.");
 }
 
 ?>
@@ -25,18 +27,10 @@ if (!$conn) {
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Peças - CicloManos</title>
+    <title>CicloManos</title>
 
     <!-- CSS ÚNICO DO PROJETO -->
     <link rel="stylesheet" href="style.css">
-
-    <!-- Bootstrap -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-        crossorigin="anonymous"
-    >
 
 </head>
 
@@ -44,7 +38,7 @@ if (!$conn) {
 
 
 <!-- =====================================================
-     TOPO
+     BARRA SUPERIOR
 ====================================================== -->
 
 <div class="topo-cinza">
@@ -57,7 +51,7 @@ if (!$conn) {
     </a>
 
     <a
-        href="https://wa.me/551239163262?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20CicloManos%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es."
+        href="https://wa.me/551239163262?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20CicloManos%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es"
         target="_blank"
     >
         💬 Fale conosco
@@ -81,7 +75,7 @@ if (!$conn) {
      CABEÇALHO
 ====================================================== -->
 
-<div class="meio-header">
+<header class="meio-header">
 
     <!-- LOGO -->
 
@@ -96,7 +90,7 @@ if (!$conn) {
     </a>
 
 
-    <!-- PESQUISA -->
+    <!-- BUSCA -->
 
     <div class="busca">
 
@@ -105,7 +99,7 @@ if (!$conn) {
             placeholder="Digite o que você procura"
         >
 
-        <button>
+        <button type="button">
             Buscar
         </button>
 
@@ -127,7 +121,7 @@ if (!$conn) {
 <a href="carrinho.php">🛒 Carrinho</a>
 </div>
 
-</div>
+</header>
 
 
 <!-- =====================================================
@@ -141,6 +135,7 @@ if (!$conn) {
     <div class="produtos-menu">
 
         <button
+            type="button"
             class="botao-produtos"
             onclick="abrirProdutos()"
         >
@@ -148,7 +143,7 @@ if (!$conn) {
         </button>
 
 
-        <!-- CAIXA DROP-DOWN -->
+        <!-- MENU DROPDOWN -->
 
         <div
             id="caixa-produtos"
@@ -172,7 +167,7 @@ if (!$conn) {
     </div>
 
 
-    <!-- OUTROS ITENS -->
+    <!-- OUTROS LINKS -->
 
     <nav>
 
@@ -190,156 +185,179 @@ if (!$conn) {
 
 
 <!-- =====================================================
-     BANNER CENTRAL
+     BANNER
 ====================================================== -->
 
-<div class="banner-central">
+<section class="banner-central">
 
     <img
         src="tcc/logo.jpg"
         alt="CicloManos"
     >
 
-</div>
+</section>
 
 
 <!-- =====================================================
-     VITRINE DE PEÇAS
+     PRODUTOS
 ====================================================== -->
 
-<div class="container mb-5">
+<main class="container-produtos">
 
-    <h2 class="text-center fw-bold mb-4">
-        Peças
+    <h2>
+        Nossa Vitrine de Produtos
     </h2>
 
 
-    <?php
-
-    // Busca somente os produtos da categoria 3 - Peças
-
-    $sql = "
-        SELECT * FROM cicloprodutos WHERE id_categoria = 3 ORDER BY produto
-    ";
-
-    $result = mysqli_query($conn, $sql);
+    <div class="produtos">
 
 
-    if (!$result) {
+        <?php
 
-        echo "
+        /*
+         * Busca os 16 produtos mais recentemente
+         * cadastrados no banco de dados.
+         */
 
-        <p class='alert alert-danger text-center'>
-
-            Erro ao buscar as peças:
-            " . mysqli_error($conn) . "
-
-        </p>
-
+        $sql = "
+            SELECT *
+            FROM cicloprodutos
+            ORDER BY id DESC
+            LIMIT 16
         ";
 
-    } else {
-
-        if (mysqli_num_rows($result) > 0) {
-
-            echo "<div class='row g-4'>";
+        $result = mysqli_query($conn, $sql);
 
 
-            while ($row = mysqli_fetch_assoc($result)) {
+        /*
+         * Verifica se houve erro na consulta.
+         */
 
-                echo "
+        if (!$result) {
 
-                <div class='col-12 col-sm-6 col-md-4 col-lg-3'>
+            echo '
 
-                    <div class='card-produto h-100 d-flex flex-column justify-content-between text-center'>
+                <div class="mensagem erro">
 
+                    Erro ao buscar os produtos:
+                    ' . htmlspecialchars(mysqli_error($conn)) . '
+
+                </div>
+
+            ';
+
+        } else {
+
+
+            /*
+             * Verifica se existem produtos.
+             */
+
+            if (mysqli_num_rows($result) > 0) {
+
+
+                /*
+                 * Percorre os produtos.
+                 */
+
+                while ($row = mysqli_fetch_assoc($result)) {
+
+                    ?>
+
+                    <div class="card-produto">
+
+                        <!-- IMAGEM -->
 
                         <a
-                            href='produtos.php?id=" . $row['id'] . "'
-                            style='text-decoration:none;'
+                            href="produtos.php?id=<?= $row['id'] ?>"
+                            class="link-produto"
                         >
 
                             <img
-                                src='" . htmlspecialchars($row['imagem']) . "'
-                                class='img-fluid'
-                                alt='" . htmlspecialchars($row['produto']) . "'
+                                src="<?= htmlspecialchars($row['imagem']) ?>"
+                                alt="<?= htmlspecialchars($row['produto']) ?>"
                             >
 
 
-                            <div class='titulo-produto fw-semibold'>
+                            <!-- NOME -->
 
-                                " . htmlspecialchars($row['produto']) . "
+                            <div class="titulo-produto">
+
+                                <?= htmlspecialchars($row['produto']) ?>
 
                             </div>
 
 
-                            <div class='preco-produto'>
+                            <!-- PREÇO -->
+
+                            <div class="preco-produto">
 
                                 R$
-                                " . number_format(
+                                <?= number_format(
                                     $row['preco_venda'],
                                     2,
                                     ',',
                                     '.'
-                                ) . "
+                                ) ?>
 
                             </div>
 
                         </a>
 
 
+                        <!-- BOTÃO CARRINHO -->
+
                         <a
-                            href='carrinho.php?acao=add&id=" . $row['id'] . "'
-                            class='btn-carrinho mt-auto'
+                            href="carrinho.php?acao=add&id=<?= $row['id'] ?>"
+                            class="btn-carrinho"
                         >
 
                             🛒 Colocar no carrinho
 
                         </a>
 
-
                     </div>
+
+                    <?php
+
+                }
+
+
+            } else {
+
+                ?>
+
+                <div class="mensagem aviso">
+
+                    Nenhum produto encontrado.
 
                 </div>
 
-                ";
+                <?php
 
             }
 
-
-            echo "</div>";
-
-
-        } else {
-
-            echo "
-
-            <p class='alert alert-warning text-center'>
-
-                Nenhuma peça encontrada.
-
-            </p>
-
-            ";
-
         }
 
-    }
+        ?>
+
+    </div>
+
+</main>
 
 
-    mysqli_close($conn);
+<!-- =====================================================
+     RODAPÉ
+====================================================== -->
 
-    ?>
+<footer>
 
-</div>
+    <p>
+        © <?= date('Y') ?> CicloManos - Todos os direitos reservados.
+    </p>
 
+</footer>
 
-    <!-- =========================
-         RODAPÉ
-    ========================= -->
-    <footer class="mt-5 text-center p-3 border-top">
-        <p class="mb-0">© <?= date('Y') ?> CicloManos - Todos os direitos reservados.</p>
-    </footer>
 
 <!-- =====================================================
      JAVASCRIPT
@@ -349,8 +367,7 @@ if (!$conn) {
 
 function abrirProdutos() {
 
-    const caixa =
-        document.getElementById("caixa-produtos");
+    const caixa = document.getElementById("caixa-produtos");
 
     caixa.classList.toggle("aberto");
 
@@ -383,4 +400,13 @@ document.addEventListener("click", function(event) {
 </body>
 
 </html>
-```
+
+<?php
+
+/*
+ * Fecha a conexão com o banco.
+ */
+
+mysqli_close($conn);
+
+?>

@@ -1,0 +1,511 @@
+/* ========================================
+   CICLOMANOS - ÁREA DO FUNCIONÁRIO
+   funcionario.css
+======================================== */
+
+
+/* ========================================
+   RESET
+======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* ========================================
+   PÁGINA
+======================================== */
+
+body {
+    min-height: 100vh;
+    background: #f7f7f7;
+    color: #222;
+}
+
+
+/* ========================================
+   CABEÇALHO
+======================================== */
+
+header {
+    background: #111;
+    color: #fff;
+    padding: 18px 6%;
+    min-height: 75px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    color: #fff;
+    text-decoration: none;
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.funcionario,
+.funcionario-logado {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.icone-funcionario,
+.funcionario-icone {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+
+    background: #fff;
+    color: #111;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 18px;
+}
+
+.dados-funcionario {
+    text-align: right;
+}
+
+.dados-funcionario strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 3px;
+}
+
+.dados-funcionario span {
+    font-size: 12px;
+    color: #bdbdbd;
+}
+
+
+/* ========================================
+   CONTEÚDO
+======================================== */
+
+.container {
+    width: 92%;
+    max-width: 1180px;
+    margin: 45px auto 60px;
+}
+
+.titulo,
+.topo {
+    margin-bottom: 28px;
+}
+
+.titulo h1,
+.topo h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #171717;
+    margin-bottom: 8px;
+}
+
+.titulo p,
+.topo p {
+    color: #777;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+
+/* ========================================
+   PAINEL - CARDS
+======================================== */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.card {
+    position: relative;
+
+    display: block;
+
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 14px;
+
+    padding: 25px;
+    min-height: 190px;
+
+    text-decoration: none;
+    color: #222;
+
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: #cfcfcf;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.10);
+}
+
+.icone {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f2f2f2;
+    border-radius: 12px;
+
+    font-size: 24px;
+
+    margin-bottom: 20px;
+}
+
+.card h2 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #181818;
+}
+
+.card p {
+    color: #777;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.seta {
+    position: absolute;
+    right: 22px;
+    bottom: 20px;
+
+    font-size: 18px;
+    color: #999;
+
+    transition: 0.2s;
+}
+
+.card:hover .seta {
+    color: #111;
+    transform: translateX(3px);
+}
+
+
+/* ========================================
+   CARD - CADASTRAR FUNCIONÁRIO
+======================================== */
+
+.card-funcionario {
+    border: 1px dashed #bdbdbd;
+}
+
+.card-funcionario .icone {
+    background: #111;
+    color: #fff;
+}
+
+
+/* ========================================
+   BOTÃO SAIR
+======================================== */
+
+.area-sair {
+    margin-top: 32px;
+
+    display: flex;
+    justify-content: flex-end;
+}
+
+.sair {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 11px 20px;
+
+    border: 1px solid #ddd;
+    border-radius: 8px;
+
+    background: #fff;
+    color: #333;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: 0.2s;
+}
+
+.sair:hover {
+    background: #111;
+    border-color: #111;
+    color: #fff;
+}
+
+
+/* ========================================
+   FORMULÁRIO DE CADASTRO
+======================================== */
+
+.formulario {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 14px;
+
+    padding: 32px;
+
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+}
+
+.campo-completo {
+    grid-column: 1 / -1;
+}
+
+label {
+    font-weight: 600;
+    font-size: 13px;
+    color: #333;
+
+    margin-bottom: 8px;
+}
+
+input,
+select {
+    width: 100%;
+    height: 46px;
+
+    padding: 0 13px;
+
+    border: 1px solid #d6d6d6;
+    border-radius: 8px;
+
+    background: #fff;
+    color: #222;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+
+input::placeholder {
+    color: #aaa;
+}
+
+input:focus,
+select:focus {
+    border-color: #111;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+.ajuda {
+    margin-top: 6px;
+
+    color: #888;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+
+/* ========================================
+   MENSAGENS
+======================================== */
+
+.mensagem {
+    padding: 15px 17px;
+
+    border-radius: 10px;
+
+    margin-bottom: 20px;
+
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.sucesso {
+    background: #f0f7f1;
+    color: #286331;
+    border: 1px solid #c9dfcc;
+}
+
+.erro {
+    background: #faf0f0;
+    color: #a52222;
+    border: 1px solid #e4c4c4;
+}
+
+
+/* ========================================
+   BOTÕES
+======================================== */
+
+.acoes {
+    margin-top: 28px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.botao {
+    min-height: 44px;
+
+    padding: 0 22px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-decoration: none;
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.principal {
+    background: #111;
+    color: #fff;
+}
+
+.principal:hover {
+    background: #2d2d2d;
+    transform: translateY(-1px);
+}
+
+.secundario {
+    background: #f1f1f1;
+    color: #333;
+
+    border: 1px solid #ddd;
+}
+
+.secundario:hover {
+    background: #e5e5e5;
+}
+
+
+/* ========================================
+   RODAPÉ
+======================================== */
+
+footer {
+    background: #111;
+    color: #aaa;
+
+    text-align: center;
+
+    padding: 22px;
+
+    font-size: 12px;
+}
+
+
+/* ========================================
+   RESPONSIVIDADE
+======================================== */
+
+@media (max-width: 900px) {
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    header {
+        padding: 18px 5%;
+
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .funcionario,
+    .funcionario-logado {
+        flex-direction: column;
+    }
+
+    .dados-funcionario {
+        text-align: center;
+    }
+
+    .container {
+        width: 92%;
+        margin-top: 35px;
+    }
+
+    .titulo h1,
+    .topo h1 {
+        font-size: 27px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .formulario {
+        padding: 22px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .campo-completo {
+        grid-column: auto;
+    }
+
+    .acoes {
+        flex-direction: column;
+    }
+
+    .botao {
+        width: 100%;
+    }
+
+    .area-sair {
+        justify-content: stretch;
+    }
+
+    .sair {
+        width: 100%;
+    }
+}

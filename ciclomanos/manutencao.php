@@ -1,111 +1,446 @@
 <?php
-require_once __DIR__ . '/config.php';
+
+session_start();
+
+require_once 'config.php';
+
+if (!isset($conn) && isset($conexao)) {
+    $conn = $conexao;
+}
+
+if (!$conn) {
+    die("Erro: Conexão com a base de dados não encontrada. Verifique o seu config.php.");
+}
 
 $codigo = '';
 $manutencao = null;
 $mensagem = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
     $codigo = trim($_POST['codigo'] ?? '');
+
     if ($codigo === '' || !ctype_digit($codigo)) {
+
         $mensagem = 'Informe um código de manutenção válido.';
+
     } else {
-        $sql = 'SELECT m.id_manutencao, m.data_entrada, m.entrega_estimada, m.status, dp.nome AS nome_cliente
+
+        $sql = 'SELECT
+                    m.id_manutencao,
+                    m.data_entrada,
+                    m.entrega_estimada,
+                    m.status,
+                    dp.nome AS nome_cliente
                 FROM manutencao AS m
-                INNER JOIN clientes AS c ON c.id_cliente = m.id_cliente
-                INNER JOIN dados_pessoais AS dp ON dp.id_dado = c.id_dado
+                INNER JOIN clientes AS c
+                    ON c.id_cliente = m.id_cliente
+                INNER JOIN dados_pessoais AS dp
+                    ON dp.id_dado = c.id_dado
                 WHERE m.id_manutencao = ?';
+
         $stmt = $conn->prepare($sql);
+
         if (!$stmt) {
+
             $mensagem = 'Não foi possível consultar a manutenção. Verifique se a coluna status foi criada no banco.';
+
         } else {
+
             $idManutencao = (int) $codigo;
+
             $stmt->bind_param('i', $idManutencao);
             $stmt->execute();
+
             $manutencao = $stmt->get_result()->fetch_assoc();
+
             $stmt->close();
-            if (!$manutencao) $mensagem = 'Nenhuma manutenção foi encontrada para esse código.';
+
+            if (!$manutencao) {
+                $mensagem = 'Nenhuma manutenção foi encontrada para esse código.';
+            }
         }
     }
 }
 
-$etapas = ['recebida' => 1, 'em_analise' => 2, 'em_manutencao' => 3, 'pronta' => 4];
-$etapaAtual = $manutencao ? ($etapas[$manutencao['status']] ?? 1) : 0;
-function e($valor) { return htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8'); }
-function formatarData($data) { return $data ? date('d/m/Y', strtotime($data)) : '-'; }
+$etapas = [
+    'recebida' => 1,
+    'em_analise' => 2,
+    'em_manutencao' => 3,
+    'pronta' => 4
+];
+
+$etapaAtual = $manutencao
+    ? ($etapas[$manutencao['status']] ?? 1)
+    : 0;
+
+function e($valor) {
+    return htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
+}
+
+function formatarData($data) {
+    return $data ? date('d/m/Y', strtotime($data)) : '-';
+}
+
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title> Manutenção - CicloManos </title>
+    <meta charset="UTF-8">
 
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; background: #f5f5f5; color: #222; }
-    a { text-decoration: none; color: inherit; }
-    .topo { background: #f5f5f5; display: flex; justify-content: space-around; padding: 8px; font-size: 12px; }
-    .topo a:hover, .usuario a:hover { color: #e60000; }
-    .meio-header { display: flex; align-items: center; justify-content: space-between; padding: 15px 40px; background: white; }
-    .logo { height: 120px; } .busca { display: flex; width: 40%; }
-    .busca input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px 0 0 5px; }
-    .busca button, .rastreio button { padding: 10px 20px; border: none; background: #4A86B8; color: white; cursor: pointer; }
-    .busca button { border-radius: 0 5px 5px 0; } .usuario a { display: block; margin: 3px 0; }
-    .menu { background: #4A86B8; color: white; display: flex; align-items: center; padding: 10px 40px; gap: 20px; }
-    .menu nav a { margin: 0 10px; } .menu nav a:hover { text-decoration: underline; }
-    .departamentos { background: #3f719b; padding: 10px 15px; border-radius: 5px; }
-    .titulo { text-align: center; margin: 30px; }
-    .rastreio { background: white; width: min(700px, 90%); margin: 0 auto 40px; padding: 30px; border-radius: 12px; box-shadow: 0 6px 15px rgba(0,0,0,.1); text-align: center; }
-    .rastreio input { width: min(60%, 360px); padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; }
-    .rastreio button { padding: 12px 25px; border-radius: 5px; } .rastreio button:hover { background: #3f719b; }
-    .mensagem { margin: 15px 0 0; padding: 12px; border-radius: 5px; background: #fde8e8; color: #9b1c1c; }
-    .status { margin-top: 30px; } .detalhes { margin: 14px 0; line-height: 1.7; }
-    .etapas { display: flex; justify-content: space-between; gap: 8px; margin-top: 20px; }
-    .etapa { flex: 1; padding: 10px 5px; border-radius: 6px; background: #ddd; font-size: 14px; }
-    .ativa { background: #4A86B8; color: white; }
-    footer { background: #111; color: white; text-align: center; padding: 20px; margin-top: 40px; }
-    @media (max-width:650px) { .meio-header, .topo, .menu { padding-left: 15px; padding-right: 15px; } .busca { display:none; } .etapas { flex-direction:column; } .rastreio input { width:100%; } }
-  </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manutenção - CicloManos</title>
+
+    <!-- CSS ÚNICO DO PROJETO -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- CSS ESPECÍFICO DA PÁGINA DE MANUTENÇÃO -->
+    <link rel="stylesheet" href="manutencao.css">
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        crossorigin="anonymous"
+    >
+
+
+
 </head>
 
 <body>
 
-  <div class="topo">
-    <a href="manutencao.php">📍 Rastreie sua manutenção</a>
-    <a href="#">💬 Fale conosco</a><span>📱 WhatsApp: (12) 99999-0000</span>
-    <span>📞 Telefone: (12) 3721-0000</span>
-  </div>
 
-  <header class="meio-header">
+<!-- =====================================================
+     TOPO
+====================================================== -->
+
+<div class="topo-cinza">
+
+    <a
+        href="https://share.google/jYgrtVLyebEBGaqzt"
+        target="_blank"
+    >
+        📍 Localização
+    </a>
+
+    <a
+        href="https://wa.me/551239163262?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20CicloManos%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es."
+        target="_blank"
+    >
+        💬 Fale conosco
+    </a>
+
+    <a
+        href="https://wa.me/551239163262"
+        target="_blank"
+    >
+        📱 WhatsApp: (12) 3916-3262
+    </a>
+
+    <span>
+        📞 Telefone: (12) 3916-3262
+    </span>
+
+</div>
+
+
+<!-- =====================================================
+     CABEÇALHO
+====================================================== -->
+
+<div class="meio-header">
+
+    <!-- LOGO -->
+
     <a href="index.php">
-      <img src="https://i.pinimg.com/736x/88/99/99/889999c134977d6379c48cea6a4ff373.jpg" class="logo" alt="CicloManos"></a>
-      <div class="busca"><input type="text" placeholder="Digite o que você procura">
-      <button type="button">Buscar</button>
+
+        <img
+            src="tcc/logo.jpg"
+            class="logo"
+            alt="Logo CicloManos"
+        >
+
+    </a>
+
+
+    <!-- PESQUISA -->
+
+    <div class="busca">
+
+        <input
+            type="text"
+            placeholder="Digite o que você procura"
+        >
+
+        <button>
+            Buscar
+        </button>
+
     </div>
-      
-      <div class="usuario">
-        <a href="#">👤 Conta</a>
-        <a href="#">🛒 Carrinho</a></div>
-      </header>
 
-  <div class="menu"><a href="departamentos.html " class="departamentos">☰ Departamentos</a><nav><a href="acessorios.html">Acessórios</a><a href="bicicletas.html">Bicicletas</a><a href="pecas.html">Peças</a><a href="manutencao.php">Manutenção</a><a href="ofertas.html">Ofertas</a></nav></div>
-  <h2 class="titulo">ACOMPANHE SUA MANUTENÇÃO</h2>
-  <main class="rastreio">
-    <p>Digite o código da sua manutenção:</p>
-    <form method="post" action="manutencao.php"><input type="text" id="codigo" name="codigo" value="<?= e($codigo) ?>" inputmode="numeric" required><br><button type="submit">Acompanhar</button></form>
-    <?php if ($mensagem): ?><p class="mensagem"><?= e($mensagem) ?></p><?php endif; ?>
-    <?php if ($manutencao): ?>
-      <section class="status"><h3>Status da bicicleta: <?= e(ucwords(str_replace('_', ' ', $manutencao['status']))) ?></h3>
-        <p class="detalhes">Cliente: <strong><?= e($manutencao['nome_cliente']) ?></strong><br>Entrada: <?= formatarData($manutencao['data_entrada']) ?><br>Entrega estimada: <?= formatarData($manutencao['entrega_estimada']) ?></p>
-        <div class="etapas"><div class="etapa <?= $etapaAtual >= 1 ? 'ativa' : '' ?>">Recebida</div><div class="etapa <?= $etapaAtual >= 2 ? 'ativa' : '' ?>">Em análise</div><div class="etapa <?= $etapaAtual >= 3 ? 'ativa' : '' ?>">Em manutenção</div><div class="etapa <?= $etapaAtual >= 4 ? 'ativa' : '' ?>">Pronta</div></div>
-      </section>
-    <?php endif; ?>
-  </main>
 
-  <footer><p>© 2026 CicloManos - Todos os direitos reservados</p></footer>
+    <!-- CONTA E CARRINHO -->
+
+    <div class="usuario">
+<?php if (($_SESSION['tipo_usuario'] ?? '') === 'funcionario'): ?>
+    <a href="painel_funcionario.php">👤 <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Funcionário', ENT_QUOTES, 'UTF-8') ?></a>
+<?php elseif (($_SESSION['tipo_usuario'] ?? '') === 'cliente'): ?>
+    <a href="minha_conta.php">👤 Olá, <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Cliente', ENT_QUOTES, 'UTF-8') ?></a>
+    <a href="logout.php">Sair</a>
+<?php else: ?>
+    <a href="login.php">👤 Conta</a>
+    <a href="login_funcionario.php">Área do funcionário</a>
+<?php endif; ?>
+<a href="carrinho.php">🛒 Carrinho</a>
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     MENU PRINCIPAL
+====================================================== -->
+
+<div class="menu-bar">
+
+    <!-- PRODUTOS -->
+
+    <div class="produtos-menu">
+
+        <button
+            class="botao-produtos"
+            onclick="abrirProdutos()"
+        >
+            ☰ Produtos
+        </button>
+
+
+        <!-- CAIXA DROP-DOWN -->
+
+        <div
+            id="caixa-produtos"
+            class="caixa-produtos"
+        >
+
+            <a href="acessorios.php">
+                Acessórios
+            </a>
+
+            <a href="pecas.php">
+                Peças
+            </a>
+
+            <a href="bicicletas.php">
+                Bicicletas
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- OUTROS ITENS -->
+
+    <nav>
+
+        <a href="manutencao.php">
+            Manutenção
+        </a>
+
+        <a href="ofertas.php">
+            Ofertas
+        </a>
+
+    </nav>
+
+</div>
+
+
+<!-- =====================================================
+     BANNER CENTRAL
+====================================================== -->
+
+<div class="banner-central">
+
+    <img
+        src="tcc/logo.jpg"
+        alt="CicloManos"
+    >
+
+</div>
+
+
+<!-- =====================================================
+     ACOMPANHAMENTO DE MANUTENÇÃO
+====================================================== -->
+
+<div class="container mb-5">
+
+    <h2 class="text-center fw-bold mb-4">
+        Acompanhe sua manutenção
+    </h2>
+
+
+    <div class="manutencao-container">
+
+        <div class="rastreio-card text-center">
+
+            <p class="mb-2">
+                Digite o código da sua manutenção:
+            </p>
+
+
+            <form
+                method="post"
+                action="manutencao.php"
+                class="rastreio-form"
+            >
+
+                <input
+                    type="text"
+                    id="codigo"
+                    name="codigo"
+                    value="<?= e($codigo) ?>"
+                    inputmode="numeric"
+                    placeholder="Código da manutenção"
+                    required
+                >
+
+                <button type="submit">
+                    Acompanhar
+                </button>
+
+            </form>
+
+
+            <?php if ($mensagem): ?>
+
+                <div class="alert alert-danger mensagem-manutencao">
+                    <?= e($mensagem) ?>
+                </div>
+
+            <?php endif; ?>
+
+
+            <?php if ($manutencao): ?>
+
+                <section class="status-manutencao">
+
+                    <h3 class="fw-bold">
+                        Status da bicicleta:
+                        <?= e(ucwords(str_replace('_', ' ', $manutencao['status']))) ?>
+                    </h3>
+
+
+                    <p class="detalhes-manutencao">
+
+                        Cliente:
+                        <strong>
+                            <?= e($manutencao['nome_cliente']) ?>
+                        </strong>
+
+                        <br>
+
+                        Entrada:
+                        <?= formatarData($manutencao['data_entrada']) ?>
+
+                        <br>
+
+                        Entrega estimada:
+                        <?= formatarData($manutencao['entrega_estimada']) ?>
+
+                    </p>
+
+
+                    <div class="etapas-manutencao">
+
+                        <div class="etapa-manutencao <?= $etapaAtual >= 1 ? 'ativa' : '' ?>">
+                            Recebida
+                        </div>
+
+                        <div class="etapa-manutencao <?= $etapaAtual >= 2 ? 'ativa' : '' ?>">
+                            Em análise
+                        </div>
+
+                        <div class="etapa-manutencao <?= $etapaAtual >= 3 ? 'ativa' : '' ?>">
+                            Em manutenção
+                        </div>
+
+                        <div class="etapa-manutencao <?= $etapaAtual >= 4 ? 'ativa' : '' ?>">
+                            Pronta
+                        </div>
+
+                    </div>
+
+                </section>
+
+            <?php endif; ?>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     RODAPÉ
+====================================================== -->
+
+<footer class="mt-5 text-center p-3 border-top">
+
+    <p class="mb-0">
+        © <?= date('Y') ?> CicloManos - Todos os direitos reservados.
+    </p>
+
+</footer>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
+
+<script>
+
+function abrirProdutos() {
+
+    const caixa =
+        document.getElementById("caixa-produtos");
+
+    caixa.classList.toggle("aberto");
+
+}
+
+
+document.addEventListener("click", function(event) {
+
+    const produtosMenu =
+        document.querySelector(".produtos-menu");
+
+    const caixa =
+        document.getElementById("caixa-produtos");
+
+
+    if (
+        produtosMenu &&
+        !produtosMenu.contains(event.target)
+    ) {
+
+        caixa.classList.remove("aberto");
+
+    }
+
+});
+
+</script>
+
 
 </body>
+
 </html>

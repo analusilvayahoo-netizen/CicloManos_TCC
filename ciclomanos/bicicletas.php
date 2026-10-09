@@ -15,260 +15,12 @@ include 'config.php';
 
     <title>Bicicletas - CicloManos</title>
 
-    <link rel="stylesheet" href="desing.css">
+    <link rel="stylesheet" href="style.css">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
         rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
         crossorigin="anonymous">
-
-    <style>
-
-        /* =========================
-           BARRA SUPERIOR
-        ========================= */
-
-        .topo-cinza {
-            background-color: #f2f2f2 !important;
-            color: #333333 !important;
-            padding: 8px 20px !important;
-            display: flex !important;
-            justify-content: space-around !important;
-            align-items: center !important;
-            font-size: 14px !important;
-            width: 100% !important;
-        }
-
-        .topo-cinza a,
-        .topo-cinza span {
-            color: #333333 !important;
-            text-decoration: none !important;
-            font-weight: 500;
-        }
-
-        .topo-cinza a:hover {
-            opacity: 0.8;
-            text-decoration: underline !important;
-        }
-
-
-        /* =========================
-           MEIO HEADER
-        ========================= */
-
-        .meio-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            padding: 20px 0;
-            background-color: #ffffff;
-        }
-
-        .meio-header .logo {
-            max-height: 55px;
-        }
-
-        .meio-header .busca {
-            display: flex;
-            align-items: center;
-            width: 450px;
-        }
-
-        .meio-header .busca input {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ccc;
-            border-top-left-radius: 4px;
-            border-bottom-left-radius: 4px;
-            outline: none;
-        }
-
-        .meio-header .busca button {
-            background-color: #4b86b4;
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-top-right-radius: 4px;
-            border-bottom-right-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-
-        /* =========================
-           CONTA E CARRINHO
-        ========================= */
-
-        .usuario {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .usuario a {
-            color: #333333 !important;
-            text-decoration: none !important;
-            font-size: 16px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .usuario a:hover {
-            color: #4b86b4 !important;
-        }
-
-
-        /* =========================
-           MENU PRINCIPAL
-        ========================= */
-
-        .menu-bar {
-            background-color: #4b86b4;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 40px;
-            padding: 12px 0;
-            color: #ffffff;
-            font-weight: bold;
-        }
-
-        .produtos-menu {
-            position: relative;
-        }
-
-        .botao-produtos {
-            background: none;
-            border: none;
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .caixa-produtos {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 190px;
-            background-color: white;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.20);
-            z-index: 1000;
-            padding: 8px 0;
-        }
-
-        .caixa-produtos.aberto {
-            display: block;
-        }
-
-        .caixa-produtos a {
-            display: block;
-            padding: 12px 18px;
-            color: #333 !important;
-            text-decoration: none !important;
-            font-size: 15px;
-            font-weight: normal;
-        }
-
-        .caixa-produtos a:hover {
-            background-color: #f5f5f5;
-            color: #4b86b4 !important;
-        }
-
-        .menu-bar nav {
-            display: flex;
-            align-items: center;
-            gap: 35px;
-        }
-
-        .menu-bar nav a {
-            text-decoration: none;
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-
-        /* =========================
-           BANNER CENTRAL
-        ========================= */
-
-        .banner-central {
-            text-align: center;
-            padding: 50px 0 30px 0;
-        }
-
-        .banner-central img {
-            width: 100%;
-            max-width: 520px;
-            height: auto;
-        }
-
-
-        /* =========================
-           CARDS DE PRODUTOS
-        ========================= */
-
-        .card-produto {
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 15px;
-            background-color: #ffffff;
-            transition: box-shadow 0.2s ease-in-out;
-        }
-
-        .card-produto:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-produto img {
-            height: 180px;
-            object-fit: contain;
-            margin-bottom: 15px;
-        }
-
-        .card-produto .titulo-produto {
-            font-size: 14px;
-            color: #333333;
-            min-height: 42px;
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-
-        .card-produto .preco-produto {
-            color: #4b86b4;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .btn-carrinho {
-            background-color: #4b86b4 !important;
-            color: #ffffff !important;
-            border: none !important;
-            padding: 8px;
-            border-radius: 4px;
-            font-weight: 500;
-            display: block;
-            width: 100%;
-            text-align: center;
-            text-decoration: none !important;
-            font-size: 14px;
-        }
-
-        .btn-carrinho:hover {
-            background-color: #3b6c95 !important;
-        }
-
-    </style>
-
 </head>
 
 <body>
@@ -327,32 +79,17 @@ include 'config.php';
 
 
         <div class="usuario">
-
-            <?php if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] === 'funcionario'): ?>
-
-                <a href="painel_funcionario.php">
-                    👤 <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Funcionário') ?>
-                </a>
-
-            <?php elseif (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] === 'cliente'): ?>
-
-                <a href="index.php">
-                    👤 Olá, <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Cliente') ?>
-                </a>
-
-            <?php else: ?>
-
-                <a href="login.php">
-                    👤 Conta
-                </a>
-
-            <?php endif; ?>
-
-            <a href="carrinho.php">
-                🛒 Carrinho
-            </a>
-
-        </div>
+<?php if (($_SESSION['tipo_usuario'] ?? '') === 'funcionario'): ?>
+    <a href="painel_funcionario.php">👤 <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Funcionário', ENT_QUOTES, 'UTF-8') ?></a>
+<?php elseif (($_SESSION['tipo_usuario'] ?? '') === 'cliente'): ?>
+    <a href="minha_conta.php">👤 Olá, <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Cliente', ENT_QUOTES, 'UTF-8') ?></a>
+    <a href="logout.php">Sair</a>
+<?php else: ?>
+    <a href="login.php">👤 Conta</a>
+    <a href="login_funcionario.php">Área do funcionário</a>
+<?php endif; ?>
+<a href="carrinho.php">🛒 Carrinho</a>
+</div>
 
     </div>
 
@@ -436,19 +173,8 @@ include 'config.php';
 
         <?php
 
-        /*
-         * CATEGORIAS DO BANCO:
-         *
-         * 2 = Acessórios
-         * 3 = Peças
-         * 4 = Bicicletas
-         *
-         * A vitrine de bicicletas usa diretamente
-         * o id_categoria 4.
-         */
-
-        $sql = "SELECT * FROM cicloprodutos
-                WHERE id_categoria = 4";
+        /* Todas as bicicletas, inclusive Mountain Bikes, ficam em Bicicletas (ID 2). */
+        $sql = "SELECT * FROM cicloprodutos WHERE id_categoria = 2 ORDER BY produto";
 
 
         $result = mysqli_query($conn, $sql);
@@ -564,18 +290,12 @@ include 'config.php';
     </div>
 
 
+
     <!-- =========================
          RODAPÉ
     ========================= -->
-
-    <footer class="mt-5 text-center p-3 bg-light border-top">
-
-        <p class="mb-0">
-
-            © <?= date('Y') ?> CicloManos - Todos os direitos reservados.
-
-        </p>
-
+    <footer class="mt-5 text-center p-3 border-top">
+        <p class="mb-0">© <?= date('Y') ?> CicloManos - Todos os direitos reservados.</p>
     </footer>
 
 

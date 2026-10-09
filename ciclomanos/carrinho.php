@@ -15,65 +15,6 @@ if (!isset($_SESSION['carrinho'])) {
 
 
 /* =========================================================
-   ADICIONAR PRODUTO POR LINK
-========================================================= */
-
-if (isset($_GET['acao']) && $_GET['acao'] === 'add') {
-
-    $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-
-    if ($id !== false && $id !== null) {
-
-        $sql = "
-            SELECT
-                id,
-                produto,
-                descricao,
-                imagem,
-                preco_venda
-            FROM cicloprodutos
-            WHERE id = ?
-        ";
-
-        $stmt = mysqli_prepare($conn, $sql);
-
-        if ($stmt) {
-
-            mysqli_stmt_bind_param($stmt, "i", $id);
-            mysqli_stmt_execute($stmt);
-
-            $resultado = mysqli_stmt_get_result($stmt);
-            $produto = mysqli_fetch_assoc($resultado);
-
-            if ($produto) {
-
-                if (isset($_SESSION['carrinho'][$id])) {
-
-                    $_SESSION['carrinho'][$id]['quantidade']++;
-
-                } else {
-
-                    $_SESSION['carrinho'][$id] = [
-                        'id' => (int)$produto['id'],
-                        'produto' => $produto['produto'],
-                        'descricao' => $produto['descricao'],
-                        'imagem' => $produto['imagem'],
-                        'preco' => (float)$produto['preco_venda'],
-                        'quantidade' => 1
-                    ];
-                }
-            }
-
-            mysqli_stmt_close($stmt);
-        }
-    }
-
-    header('Location: carrinho_corrigido.php');
-    exit;
-}
-
-
-/* =========================================================
    ADICIONAR PRODUTO
 ========================================================= */
 
@@ -330,7 +271,7 @@ foreach ($_SESSION['carrinho'] as $produto) {
 
 <div class="meio-header">
 
-<a href="index.php">
+<a href="ciclomanos.php">
 
 <img
     src="tcc/logo.jpg"
@@ -368,15 +309,15 @@ foreach ($_SESSION['carrinho'] as $produto) {
 
 <nav>
 
-<a href="acessorios.php">
+<a href="acessorios.html">
 Acessórios
 </a>
 
-<a href="bicicletas.php">
+<a href="bicicletas.html">
 Bicicletas
 </a>
 
-<a href="pecas.php">
+<a href="pecas.html">
 Peças
 </a>
 
@@ -384,7 +325,7 @@ Peças
 Manutenção
 </a>
 
-<a href="ofertas.php">
+<a href="ofertas.html">
 Ofertas
 </a>
 
@@ -417,7 +358,7 @@ Adicione produtos para começar sua compra.
 </p>
 
 <a
-    href="index.php"
+    href="ciclomanos.php"
     class="botao-comprar"
 >
 Continuar comprando

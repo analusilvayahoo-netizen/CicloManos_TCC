@@ -1,0 +1,228 @@
+/* =====================================================
+   CSS ESPECÍFICO - PÁGINA DE MANUTENÇÃO
+   Não altera o style.css principal do site
+===================================================== */
+
+
+/* Caixa principal de rastreamento */
+
+.rastreio-manutencao {
+    max-width: 850px;
+    margin: 0 auto 50px;
+    padding: 38px 45px;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.10);
+    text-align: center;
+}
+
+
+/* Texto acima do campo */
+
+.texto-rastreio {
+    margin-bottom: 18px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #333;
+}
+
+
+/* Formulário */
+
+.form-rastreio {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+
+/* Campo do código */
+
+.form-rastreio input {
+    width: 360px;
+    max-width: 100%;
+    height: 50px;
+    padding: 0 18px;
+
+    border: 2px solid #d8d8d8;
+    border-radius: 10px;
+
+    background: #fafafa;
+    color: #222;
+
+    font-size: 16px;
+    outline: none;
+
+    transition: 0.2s ease;
+}
+
+
+/* Placeholder */
+
+.form-rastreio input::placeholder {
+    color: #999;
+}
+
+
+/* Campo selecionado */
+
+.form-rastreio input:focus {
+    border-color: #4A86B8;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(74, 134, 184, 0.12);
+}
+
+
+/* Botão */
+
+.btn-rastrear {
+    height: 50px;
+    padding: 0 25px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #4A86B8;
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+
+.btn-rastrear:hover {
+    background: #3f719b;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(63, 113, 155, 0.25);
+}
+
+
+.btn-rastrear:active {
+    transform: translateY(0);
+}
+
+
+/* Mensagem de erro */
+
+.mensagem-manutencao {
+    margin-top: 22px;
+    padding: 12px 15px;
+
+    border-radius: 8px;
+
+    background: #fde8e8;
+    color: #9b1c1c;
+
+    font-size: 14px;
+}
+
+
+/* Resultado da manutenção */
+
+.status-manutencao {
+    margin-top: 32px;
+    padding-top: 28px;
+
+    border-top: 1px solid #e5e5e5;
+}
+
+
+.status-manutencao h3 {
+    margin-bottom: 15px;
+
+    color: #333;
+    font-size: 22px;
+}
+
+
+.status-manutencao .detalhes {
+    color: #555;
+    line-height: 1.8;
+}
+
+
+/* Etapas */
+
+.etapas-manutencao {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+
+    margin-top: 28px;
+}
+
+
+.etapas-manutencao .etapa {
+    flex: 1;
+
+    min-height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px;
+
+    border-radius: 10px;
+
+    background: #e9e9e9;
+    color: #777;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: 0.2s ease;
+}
+
+
+/* Etapa atual/concluída */
+
+.etapas-manutencao .etapa.ativa {
+    background: #4A86B8;
+    color: #ffffff;
+
+    box-shadow: 0 4px 10px rgba(74, 134, 184, 0.20);
+}
+
+
+/* Responsividade */
+
+@media (max-width: 700px) {
+
+    .rastreio-manutencao {
+        width: 92%;
+        padding: 30px 20px;
+    }
+
+
+    .form-rastreio {
+        flex-direction: column;
+    }
+
+
+    .form-rastreio input {
+        width: 100%;
+    }
+
+
+    .btn-rastrear {
+        width: 100%;
+    }
+
+
+    .etapas-manutencao {
+        flex-direction: column;
+    }
+
+
+    .etapas-manutencao .etapa {
+        min-height: 50px;
+    }
+
+}

@@ -161,89 +161,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             try {
                 $q = $pdo->prepare(
-                    'SELECT u.id_usuario, u.id_dado, u.senha_hash, d.nome
+                    'SELECT u.id_usuario, u.id_dado, u.senha_hash, d.nome, d.email
                      FROM usuarios u
                      INNER JOIN dados_pessoais d ON d.id_dado = u.id_dado
                      WHERE d.email = :email
                      LIMIT 1'
                 );
-
                 $q->execute(['email' => $email]);
                 $usuario = $q->fetch();
 
                 if (!$usuario || !password_verify($senha, $usuario['senha_hash'])) {
                     $loginMessage = 'E-mail ou senha incorretos.';
                 } else {
-                    session_regenerate_id(true);
-
-                    $_SESSION['id_usuario'] = (int)$usuario['id_usuario'];
-                    $_SESSION['nome_usuario'] = $usuario['nome'];
-                    $_SESSION['email_usuario'] = $email;
-
                     $idDado = (int)$usuario['id_dado'];
-                    $dominioFuncionario = '@ciclomanos.com';
 
-                    /* Funcionário: o domínio do e-mail determina o tipo esperado. */
-                    if (str_ends_with($email, $dominioFuncionario)) {
+                    // Esta tela aceita somente contas cadastradas como clientes.
+                    $qCliente = $pdo->prepare(
+                        'SELECT id_cliente
+                         FROM clientes
+                         WHERE id_dado = :id_dado
+                         LIMIT 1'
+                    );
+                    $qCliente->execute(['id_dado' => $idDado]);
+                    $cliente = $qCliente->fetch();
 
+                    if (!$cliente) {
                         $qFuncionario = $pdo->prepare(
-                            'SELECT id_funcionario, cargo
+                            'SELECT id_funcionario
                              FROM funcionarios
                              WHERE id_dado = :id_dado
                              LIMIT 1'
                         );
-
                         $qFuncionario->execute(['id_dado' => $idDado]);
                         $funcionario = $qFuncionario->fetch();
 
-                        if (!$funcionario) {
-                            unset(
-                                $_SESSION['id_usuario'],
-                                $_SESSION['nome_usuario'],
-                                $_SESSION['email_usuario']
-                            );
-
-                            $loginMessage = 'Conta de funcionário não cadastrada.';
-                        } else {
-                            $_SESSION['tipo_usuario'] = 'funcionario';
-                            $_SESSION['id_funcionario'] = (int)$funcionario['id_funcionario'];
-                            $_SESSION['cargo_funcionario'] = $funcionario['cargo'];
-
-                            header('Location: painel_funcionario.php');
-                            exit;
-                        }
-
-                    /* Cliente: qualquer outro domínio procura a conta em clientes. */
+                        $loginMessage = $funcionario
+                            ? 'Esta é uma conta de funcionário. Entre pelo acesso de funcionário.'
+                            : 'Esta conta não está cadastrada como cliente.';
                     } else {
-
-                        $qCliente = $pdo->prepare(
-                            'SELECT id_cliente
-                             FROM clientes
-                             WHERE id_dado = :id_dado
-                             LIMIT 1'
+                        // Atualiza somente os dados de autenticação; não limpa a sessão inteira nem o carrinho.
+                        session_regenerate_id(true);
+                        unset(
+                            $_SESSION['tipo_usuario'],
+                            $_SESSION['id_funcionario'],
+                            $_SESSION['cargo_funcionario']
                         );
 
-                        $qCliente->execute(['id_dado' => $idDado]);
-                        $cliente = $qCliente->fetch();
+                        $_SESSION['id_usuario'] = (int)$usuario['id_usuario'];
+                        $_SESSION['id_cliente'] = (int)$cliente['id_cliente'];
+                        $_SESSION['nome_usuario'] = $usuario['nome'];
+                        $_SESSION['email_usuario'] = $email;
+                        $_SESSION['tipo_usuario'] = 'cliente';
 
-                        if (!$cliente) {
-                            unset(
-                                $_SESSION['id_usuario'],
-                                $_SESSION['nome_usuario'],
-                                $_SESSION['email_usuario']
-                            );
-
-                            $loginMessage = 'Conta de cliente não cadastrada.';
-                        } else {
-                            $_SESSION['tipo_usuario'] = 'cliente';
-                            $_SESSION['id_cliente'] = (int)$cliente['id_cliente'];
-
-                            header('Location: index.php');
-                            exit;
-                        }
+                        header('Location: index.php');
+                        exit;
                     }
                 }
-
             } catch (PDOException $erro) {
                 $loginMessage = 'Erro ao realizar o login. Verifique o banco de dados.';
             }
@@ -467,7 +440,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'INSERT INTO usuarios
                     (id_dado, senha_hash, tipo)
                     VALUES
-                    (:dado, :senha, 0)'
+                    (:dado, :senha, \'cliente\')'
                 );
 
                 $q->execute([
@@ -553,7 +526,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <link
         rel="stylesheet"
-        href="login.css"
+        href="login.css?v=2"
     >
 
     <style>
@@ -719,6 +692,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         Criar conta
                     </a>
 
+                </div>
+
+                <div class="switch acesso-funcionario">
+                    É funcionário da CicloManos?
+                    <a href="login_funcionario.php">Acesso de funcionário</a>
                 </div>
 
 
