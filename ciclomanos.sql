@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 09/10/2026 às 14:02
+-- Tempo de geração: 09/10/2026 às 16:38
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -137,7 +137,13 @@ INSERT INTO `cicloprodutos` (`id`, `produto`, `descricao`, `imagem`, `id_marca`,
 (57, 'Gancheira Astro GTS Caloi Soul Ventana Vicini Kona TSW', 'Gancheira de câmbio utilizada para fixar o câmbio traseiro ao quadro da bicicleta.', 'https://m.magazineluiza.com.br/a-static/420x420/gancheira-astro-gts-caloi-soul-ventana-vicini-kona-tsw-gantech/lojaduasrodas/l00860/6d76ebd86750964ffdb5a803f856844b.jpeg', 3, 'Universal', 59.90, 3, 3, 3, 0, 0, 0, 0),
 (58, 'Kit Quadro e Garfo Ultra Bikes Feminino Aro 20', 'Quadro com garfo aro 20 fabricado em material leve e resistente.', 'https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcT8lzTEEoUA6YxT_TxXfCZQ2_0SjSLx2fr6ZiJGs2yNkrUIt2yXsaNkygX-kuvoa42U8MzLgcBmSxodxZguLllPgGz1KC57nxuOjXMiW2t4vv2opUni5ZSD', 1, 'Umbf20', 192.00, 3, 3, 3, 0, 0, 0, 0),
 (59, 'Tampa Superior do Headset de Bicicleta 28.6mm', 'Acessório para headset de bicicleta, feito em liga de alumínio.', 'https://down-br.img.susercontent.com/file/sg-11134201-825ap-msnk2hbn1ceee6.webp', 1, 'Haste Garfo', 17.00, 3, 3, 3, 0, 0, 0, 0),
-(60, 'Válvula VAR Tubeless Alumínio 44 mm', 'Válvula tubeless de alumínio com 44 mm, utilizada em rodas compatíveis com sistemas sem câmara de ar.', 'https://cdn.deporvillage.com/cdn-cgi/image/h=2250,w=1800,dpr=1,f=auto,q=75,fit=contain,background=white/product-vertical/44511.jpg', 3, 'VAR 44 mm', 79.90, 3, 3, 3, 0, 0, 0, 0);
+(60, 'Válvula VAR Tubeless Alumínio 44 mm', 'Válvula tubeless de alumínio com 44 mm, utilizada em rodas compatíveis com sistemas sem câmara de ar.', 'https://cdn.deporvillage.com/cdn-cgi/image/h=2250,w=1800,dpr=1,f=auto,q=75,fit=contain,background=white/product-vertical/44511.jpg', 3, 'VAR 44 mm', 79.90, 3, 3, 3, 0, 0, 0, 0),
+(61, 'Bicicleta First Smitt Aro 29 – 21 Com Marchas ', 'Bicicleta moderna e robusta, ideal para passeios, uso diário e trilhas leves. Conta com aro 29, 21 marchas e design esportivo, oferecendo versatilidade, estabilidade e conforto para suas pedaladas. Uma ótima opção para quem busca praticidade e estilo!', 'https://dcdn-us.mitiendanube.com/stores/004/790/467/products/d_nq_np_2x_866306-mlb113583677644_072026-f-bicicleta-aro-29-first-smitt-21v-shimano-robusta-confortavel-927215b184da18ff0d17867123827318-480-0.webp', 24, 'aro 26 - Com Marcha', 999.99, 3, 2, 2, 0, 0, 0, 0),
+(62, 'Bicicleta First Aro 29 Smitt 21v Freio Disco Preto/Prata 15,5', 'Se você está em busca da sua primeira mountain bike ou de uma parceira confiável para pedais recreativos, a MTB First Smitt Aro 29 é a escolha ideal. Robusta, eficiente e com um design moderno, ela une o melhor custo-benefício para quem deseja explorar trilhas leves nos finais de semana ou garantir ', 'https://static.cicloeg.com.br/public/cicloembuguacu/imagens/produtos/bicicleta-first-aro-29-smitt-21v-freio-disco-preto-prata-15-5-6a8dc367a39ed.png', 24, 'bike aro 29', 999.99, 3, 2, 2, 0, 0, 0, 0),
+(63, 'QUADRO FIRST LIFTY GOLD 2024 29X19 PRATA/CHUMBO BRILHO 3.0 ', 'QUADRO FIRST LIFTY GOLD 2024 29X19 PRATA/CHUMBO BRILHO 3.0', 'https://upload-arquivos.s3-sa-east-1.amazonaws.com/img/produtos_fotos/233674/8d89e4be28865050d8b2995857d88361.jpg', 24, 'QUADRO FIRST LIFTY GOLD 2024 29X19 PRATA/CHUMBO BRILHO 3.0 ', 500.00, 2, 1, 3, 0, 0, 0, 0),
+(64, 'Quadro De Bicicleta First Smitt 4.0 Vermelho Preto Brilho', 'Quadro De Bicicleta First Smitt 4.0 Vermelho Preto Brilho', 'https://http2.mlstatic.com/D_NQ_NP_992388-MLA82777177906_032025-O.webp', 24, 'Quadro De Bicicleta First Smitt 4.0 Vermelho Preto Brilho', 500.00, 2, 1, 3, 0, 0, 0, 0),
+(65, 'Quadro De Bicicleta First Smitt 4.0 Amarelo Preto Brilho Fem ', 'Quadro De Bicicleta First Smitt 4.0 Amarelo Preto Brilho Fem ', 'https://http2.mlstatic.com/D_NQ_NP_605035-MLA92848095984_092025-O.webp', 24, 'Quadro De Bicicleta First Smitt 4.0 Amarelo Preto Brilho Fem ', 500.00, 2, 1, 3, 0, 0, 0, 0),
+(66, 'Quadro First Athymus', 'Quadro First Athymus', 'https://http2.mlstatic.com/D_NQ_NP_818382-MLB74305184124_022024-W.webp', 24, 'Quadro First Athymus', 500.00, 2, 1, 3, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -339,7 +345,8 @@ INSERT INTO `marcas` (`id_marca`, `nome_marca`) VALUES
 (20, 'Touch Screedew'),
 (21, 'HUPI'),
 (22, 'Ultra Bikes'),
-(23, 'Sunrun');
+(23, 'Sunrun'),
+(24, 'First');
 
 -- --------------------------------------------------------
 
@@ -612,7 +619,7 @@ ALTER TABLE `categorias`
 -- AUTO_INCREMENT de tabela `cicloprodutos`
 --
 ALTER TABLE `cicloprodutos`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT de tabela `cidades`
