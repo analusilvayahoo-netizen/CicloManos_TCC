@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 09-10-2026 a las 03:01:08
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.0.30
+-- Host: 127.0.0.1
+-- Tempo de geração: 09/10/2026 às 14:02
+-- Versão do servidor: 10.4.32-MariaDB
+-- Versão do PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `ciclomanos`
+-- Banco de dados: `ciclomanos`
 --
 CREATE DATABASE IF NOT EXISTS `ciclomanos` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `ciclomanos`;
@@ -26,7 +26,7 @@ USE `ciclomanos`;
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `bairros`
+-- Estrutura para tabela `bairros`
 --
 
 DROP TABLE IF EXISTS `bairros`;
@@ -37,7 +37,7 @@ CREATE TABLE `bairros` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `bairros`
+-- Despejando dados para a tabela `bairros`
 --
 
 INSERT INTO `bairros` (`id_bairro`, `nome_bairro`, `id_cidade`) VALUES
@@ -48,7 +48,7 @@ INSERT INTO `bairros` (`id_bairro`, `nome_bairro`, `id_cidade`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `categorias`
+-- Estrutura para tabela `categorias`
 --
 
 DROP TABLE IF EXISTS `categorias`;
@@ -58,7 +58,7 @@ CREATE TABLE `categorias` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `categorias`
+-- Despejando dados para a tabela `categorias`
 --
 
 INSERT INTO `categorias` (`id_categoria`, `nome_categoria`) VALUES
@@ -70,7 +70,7 @@ INSERT INTO `categorias` (`id_categoria`, `nome_categoria`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `cicloprodutos`
+-- Estrutura para tabela `cicloprodutos`
 --
 
 DROP TABLE IF EXISTS `cicloprodutos`;
@@ -92,14 +92,14 @@ CREATE TABLE `cicloprodutos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `cicloprodutos`
+-- Despejando dados para a tabela `cicloprodutos`
 --
 
 INSERT INTO `cicloprodutos` (`id`, `produto`, `descricao`, `imagem`, `id_marca`, `modelo`, `preco_venda`, `qtd_atual`, `estoque_minimo`, `id_categoria`, `modalidade`, `tamanho_aro`, `material`, `cor`) VALUES
-(1, 'Bicicleta Caloi Elite Carbon Sport', 'Bicicleta de alta performance aro 29, ideal para trilhas, passeios e competições, com quadro em carbono, suspensão dianteira e transmissão de 12 velocidades.', 'https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTsaUPq1FtQzs8BHDddmgTPdNI3iGOH0FVfelcyzuNpEf5YJ_V--bh_5ZR3G_8-UiIZ6jY0i0qm5pZkwoh6usLUG7Go9OR4dH8arHCD-ukQ08GKAWWJF0c2w', 2, 'Elite Carbon Sport 2026', 999.99, 10, 2, 2, 0, 29, 0, 0),
+(1, 'Bicicleta Caloi Elite Carbon Sport', 'Bicicleta de alta performance aro 29, ideal para trilhas, passeios e competições, com quadro em carbono, suspensão dianteira e transmissão de 12 velocidades.', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTI0MTTXW_ZYzT036uJR_GC32zRJQyT_sPwfrs0LqIc0g&s=10', 2, 'Elite Carbon Sport 2026', 999.99, 10, 2, 2, 0, 29, 0, 0),
 (2, 'Bicicleta Aro 29 Aço Carbono Freios A Disco Suspensão 21', 'A bicicleta aro 29 em aço carbono da marca KGT é ideal para adultos que buscam um passeio confortável e seguro. Com freios a disco mecânico dianteiro e traseiro, proporciona uma frenagem eficiente em qualquer situação. Com 21 velocidades, permite ajustar a marcha de acordo com o terreno, garantindo', 'https://http2.mlstatic.com/D_NQ_NP_2X_872071-MLB91746760832_092025-F-bicicleta-aro-29-aco-carbono-freios-a-disco-suspenso-21-vel.webp', 3, 'KGT Bikes', 740.00, 6, 2, 2, 0, 29, 0, 0),
 (6, 'BICICLETA AUDAX VENTUS 1000 CLARIS', 'Pronta para enfrentar terrenos ousados, a Bicicleta Speed Audax Ventus 1000 Claris oferece uma experiência de ciclismo inigualável, projetada com alta tecnologia para garantir leveza, versatilidade e precisão. Ideal para ciclistas que buscam desempenho extremo em diversas situações de movimento.', 'https://images.tcdn.com.br/img/img_prod/1372186/bicicleta_audax_ventus_1000_claris_azul_cyano_azul_escuro_501_variacao_1687_1_b2a837e3cc19fa2db4632d539210c5d4.jpg', 4, 'AUDAX VENTUS 1000 CLARIS', 999.99, 10, 2, 2, 0, 29, 0, 0),
-(11, 'Aeroad CF SLX 7 Di2', 'Design de quadro mais rápido do pelotão (ou \"do ciclismo profissional\"). Tradição de corrida inigualável da Aeroad CFR. Grupo Shimano 105 Di2 com medidor de potência 4iiii. Rodas de carbono DT Swiss ARC 1600 de 65 mm. Tecnologia PACE: ajustes rápidos no cockpit.', 'https://dma.canyon.com/image/upload/w_2500,h_2500,c_fit/b_rgb:F2F2F2/f_auto/q_auto/v1777532962/2027_FULL_aeroad_cf-slx-7-di2_4531_R107_P01_zsqbop', 5, 'Aeroad CF SLX 7 Di2', 999.99, 6, 2, 2, 0, 29, 0, 0),
+(11, 'Aeroad CF SLX 7 Di2', 'Design de quadro mais rápido do pelotão (ou \"do ciclismo profissional\"). Tradição de corrida inigualável da Aeroad CFR. Grupo Shimano 105 Di2 com medidor de potência 4iiii. Rodas de carbono DT Swiss ARC 1600 de 65 mm. Tecnologia PACE: ajustes rápidos no cockpit.', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAyWK4EdBBBkD95B9RL4waDZ3hDHT8NWvhLdpBALGRjg&s=10', 5, 'Aeroad CF SLX 7 Di2', 999.99, 6, 2, 2, 0, 29, 0, 0),
 (14, 'Bicicleta Aro 700 Rino Speed Gaya Aluminio 2x9v', 'A bicicleta é elogiada por ser leve, bonita e adequada para iniciantes, com um bom custo-benefício. No entanto, há críticas sobre a qualidade do acabamento e algumas peças, como o pedal e o câmbio de marcha.', 'https://http2.mlstatic.com/D_NQ_NP_2X_988940-MLA110999033619_042026-F.webp', 6, 'Aro 700 Rino Speed Gaya Aluminio 2x9v', 999.99, 50, 10, 2, 0, 0, 0, 0),
 (15, 'Bicicleta Aro 29 KRW Alumínio 27v Freio Hidráulico R7', 'Mountain Bike (MTB) equipada com o consagrado quadro First Smitt de tamanho 17,5 (tamanho M, ideal para ciclistas entre 1,60m e 1,72m de altura). Fabricada em alumínio 6061 leve e resistente, conta com cabeamento interno parcial para um visual moderno e limpo. Possui rodas aro 29 de parede dupla.', 'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSmtQApzly_MedvsbGL5ovHKN-cUbUFaKd4KNwg1dTk8aYBnmJ6vKflMB9R8GyzJyZdvx_59uPd27P-3ZM23vmt49juwIR4M8aXcJBTk3YxqCxEVZNRp9unnw', 7, 'Aro 29 KRW', 999.99, 2, 1, 2, 0, 0, 0, 0),
 (16, 'Bicicleta Aro 26 Ultra Bikes Summer Bicolor 6 Marchas', 'A Bicicleta Ultra Bikes Summer é sinônimo de conforto, leveza e segurança, com toda a sua beleza no estilo vintage, ela é sua companheira ideal para as pedaladas diárias.', 'https://http2.mlstatic.com/D_NQ_NP_703742-MLA112553993240_062026-O.webp', 8, 'Aro 26 Ultra Bikes Summer', 726.00, 3, 1, 2, 0, 0, 0, 0),
@@ -120,12 +120,29 @@ INSERT INTO `cicloprodutos` (`id`, `produto`, `descricao`, `imagem`, `id_marca`,
 (31, 'Capacete Ciclismo Moove Mtb Speed Rosa', 'O Capacete MTB Moove é ideal para quem busca segurança e conforto durante o pedal. Desenvolvido para mountain bike e uso urbano. Com ajuste de tamanho 54 a 58, oferece encaixe confortável e firme, além de design moderno na cor rosa.', 'https://down-br.img.susercontent.com/file/br-11134207-820lb-mlco4jqkevpi95@resize_w450_nl.webp', 18, 'Moove Mtb Speed', 59.00, 3, 3, 4, 0, 29, 0, 0),
 (32, 'Capacete Bike Ciclismo Rosa Leve', 'Capacete Bike DEKO Rosa. Desenvolvido para quem busca proteção sem abrir mão do estilo, ele possui design moderno e aerodinâmico, além de diversas entradas de ar que proporcionam excelente ventilação durante o uso. Sua estrutura é leve e resistente.', 'https://down-br.img.susercontent.com/file/br-11134207-820lc-mr223u95zshz67@resize_w450_nl.webp', 19, 'DEKO', 79.00, 3, 3, 4, 0, 29, 0, 0),
 (33, 'Luva Ciclismo Absorção de Choque', 'Luvas que tornam as suas atividades mais agradaveis. O tecido de seda de gelo é macio e delicado, proteção solar externa, sensação interna. A absorção de umidade mantém a seco, usando orifícios de microfibra para exportar rapidamente o suor.', 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRrDcAOS8gBsrt8HmgTLcjKjai-x6F8CUUbt0phjqRCS5Na_YAdhZrRFuwPCpVFm1eCVoF5TpxSFj1hWlUliEiN00e5tRC0FFenk5IPCuP4hHcoz-9VV0yYiA', 20, 'Touch Screedew', 198.00, 3, 3, 4, 0, 29, 0, 0),
-(34, 'Luva Ciclismo HUPI Eco Dedo Curto Paintbrush', 'São confortáveis para provas longas e treinos, tem função de amortecer o impacto com o chão em quedas ou proteger as mãos de possíveis galhos soltos nas trilhas de bike.', 'https://static.hupishop.com.br/public/hupibikes/imagens/produtos/media/luva-hupi-eco-dedo-curto-paintbrush-7460.jpg', 21, 'HUPI Eco', 70.00, 3, 3, 4, 0, 29, 0, 0);
+(34, 'Luva Ciclismo HUPI Eco Dedo Curto Paintbrush', 'São confortáveis para provas longas e treinos, tem função de amortecer o impacto com o chão em quedas ou proteger as mãos de possíveis galhos soltos nas trilhas de bike.', 'https://static.hupishop.com.br/public/hupibikes/imagens/produtos/media/luva-hupi-eco-dedo-curto-paintbrush-7460.jpg', 21, 'HUPI Eco', 70.00, 3, 3, 4, 0, 29, 0, 0),
+(44, 'Óculos de Sol Esportivo para Corrida Ciclismo', 'Óculos resistentes, feitos para durar, sem abrir mão do estilo e do conforto durante os treinos.', 'https://forsunbr.com.br/cdn/shop/files/Forsun_Oculos_de_Corrida_Baixa_Pace_Esportivo.webp?v=1771110255&width=1000', 1, 'forsun', 197.00, 3, 3, 4, 0, 29, 0, 0),
+(45, 'Óculos De Sol Shimano Esportivo Com Proteção Uv400', 'Tratamento da lente: Clássica. Material da lente: Plástico. Gênero: sem gênero. O formato da armação é envolvente. Com proteção UV.', 'https://http2.mlstatic.com/D_Q_NP_630083-MLA111664884212_062026-F.webp', 1, 'Shimano', 69.00, 3, 3, 4, 0, 29, 0, 0),
+(46, 'Combo Leve 2 Movement - Óculos de Sol Esportivo para Corrida Ciclismo', 'Proteção UV400, armação ultraleve e lentes laváveis, ideais para o pós-treino.', 'https://forsunbr.com.br/cdn/shop/files/Oculos_de_corrida_Forsun_Baixa_Pace_10.webp?v=1771116123&width=400', 1, 'forsun', 299.00, 3, 3, 4, 0, 29, 0, 0),
+(47, 'Óculos Corrida Ciclismo Esportivo Pesca Proteção Uv400 Pace', 'Óculos de Ciclismo Esportivo com proteção óptica UV400.', 'https://http2.mlstatic.com/D_Q_NP_916946-MLB114386688767_072026-F-oculos-corrida-ciclismo-esportivo-pesca-proteco-uv400-pace.webp', 1, 'Sunglasses', 47.00, 3, 3, 4, 0, 29, 0, 0),
+(48, 'Óculos de Sol Esportivo para Ciclismo', 'Óculos com armação leve e aerodinâmica, lentes espelhadas coloridas e proteção contra raios UV.', 'https://m.media-amazon.com/images/I/51+wChDcixL._AC_SX425_.jpg', 1, 'Radar', 59.00, 3, 3, 4, 0, 29, 0, 0),
+(49, 'Cambio Desviador Traseiro 7/8v Index Cage Longo Sunrun S/gan', 'Câmbio traseiro Shimano Deore XT RD-M8100, compatível com transmissões de 12 velocidades, oferecendo trocas de marcha precisas e eficientes.', 'https://http2.mlstatic.com/D_Q_NP_729182-MLB69713410587_052023-F-cambio-desviador-traseiro-78v-index-cage-longo-sunrun-sgan.webp', 3, 'RD-M8100', 899.90, 3, 3, 3, 0, 29, 0, 0),
+(50, 'Conjunto de Paralamas para Bicicleta', 'Construção reforçada em plástico rígido com acabamento fosco. Adequado para bicicletas MTB, enduro e downhill em aros 26, 27.5 e 29.', 'https://m.media-amazon.com/images/I/51ynqtoDxJL._AC_SL1200_.jpg', 1, 'MTB Enduro', 24.00, 3, 3, 3, 0, 29, 0, 0),
+(51, 'Garfo Aro 26 Ultra Bike Em Aço Carbono', 'Garfo de suspensão RockShox desenvolvido para proporcionar controle, conforto e desempenho em trilhas e terrenos irregulares.', 'https://pub-eea8002c2cb74cedb7f113af7dd78002.r2.dev/produtos/garfo-bike-aro-26x1-1-2-bc-ultra-standard-aco/20517/2.webp', 3, 'RockShox', 1299.90, 3, 3, 3, 0, 29, 0, 0),
+(52, 'Kit Grupo Absolute 12v 11-52 Pedivela Integrado C/ Central', 'Kit de transmissão Shimano composto por componentes para o funcionamento do sistema de marchas da bicicleta.', 'https://http2.mlstatic.com/D_NQ_NP_2X_639510-MLB111086407019_042026-F-kit-grupo-absolute-12v-1152-pedivela-integrado-c-central.webp', 3, 'Shimano', 1899.90, 3, 3, 3, 0, 29, 0, 0),
+(53, 'Espetos de liberação rápida para bicicleta', 'Espetos de liberação rápida feitos de liga de alumínio e aço, resistentes à corrosão e adequados para trilhas.', 'https://m.media-amazon.com/images/I/51ldnhEJblL._AC_SL1500_.jpg', 1, 'Generic', 47.00, 3, 3, 3, 0, 29, 0, 0),
+(54, 'Reverse Components Pedais Escape', 'Pedais Shimano desenvolvidos para oferecer estabilidade, eficiência na pedalada e durabilidade.', 'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTlcdZeJE6z3Y-AX7kvpxDzg1mSKQGrc4KfvFlm2Dot-gLyojceQdjUe_3MywpKtzjLZX-JEX4DL9oewgyQOSWNnrmz_K6S23VegbJAoa_OMr_W6gmw9EL0i4fWeaQRzs_zyUlsDxVv6g&usqp=CAc', 3, 'Shimano', 249.90, 3, 3, 3, 0, 0, 0, 0),
+(55, 'Roda de Polia de Câmbio Traseiro de Cerâmica', 'Polia de câmbio Shimano utilizada no sistema de transmissão para auxiliar no direcionamento da corrente.', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2DuVTSGR7aYL6uwJBubqbpDVcxI_zkZILpz3gO7SMJAu2gLiP', 3, 'Shimano', 89.90, 3, 3, 3, 0, 0, 0, 0),
+(56, 'Câmbio Dianteiro Absolute Wild II 2X10V', 'Câmbio dianteiro Shimano responsável por realizar a mudança de corrente entre as coroas da bicicleta.', 'https://123tudo.com.br/cdn/shop/files/53163.jpg?v=1716390070&width=1800', 3, 'Shimano', 179.90, 3, 3, 3, 0, 0, 0, 0),
+(57, 'Gancheira Astro GTS Caloi Soul Ventana Vicini Kona TSW', 'Gancheira de câmbio utilizada para fixar o câmbio traseiro ao quadro da bicicleta.', 'https://m.magazineluiza.com.br/a-static/420x420/gancheira-astro-gts-caloi-soul-ventana-vicini-kona-tsw-gantech/lojaduasrodas/l00860/6d76ebd86750964ffdb5a803f856844b.jpeg', 3, 'Universal', 59.90, 3, 3, 3, 0, 0, 0, 0),
+(58, 'Kit Quadro e Garfo Ultra Bikes Feminino Aro 20', 'Quadro com garfo aro 20 fabricado em material leve e resistente.', 'https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcT8lzTEEoUA6YxT_TxXfCZQ2_0SjSLx2fr6ZiJGs2yNkrUIt2yXsaNkygX-kuvoa42U8MzLgcBmSxodxZguLllPgGz1KC57nxuOjXMiW2t4vv2opUni5ZSD', 1, 'Umbf20', 192.00, 3, 3, 3, 0, 0, 0, 0),
+(59, 'Tampa Superior do Headset de Bicicleta 28.6mm', 'Acessório para headset de bicicleta, feito em liga de alumínio.', 'https://down-br.img.susercontent.com/file/sg-11134201-825ap-msnk2hbn1ceee6.webp', 1, 'Haste Garfo', 17.00, 3, 3, 3, 0, 0, 0, 0),
+(60, 'Válvula VAR Tubeless Alumínio 44 mm', 'Válvula tubeless de alumínio com 44 mm, utilizada em rodas compatíveis com sistemas sem câmara de ar.', 'https://cdn.deporvillage.com/cdn-cgi/image/h=2250,w=1800,dpr=1,f=auto,q=75,fit=contain,background=white/product-vertical/44511.jpg', 3, 'VAR 44 mm', 79.90, 3, 3, 3, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `cidades`
+-- Estrutura para tabela `cidades`
 --
 
 DROP TABLE IF EXISTS `cidades`;
@@ -136,7 +153,7 @@ CREATE TABLE `cidades` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `cidades`
+-- Despejando dados para a tabela `cidades`
 --
 
 INSERT INTO `cidades` (`id_cidade`, `nome_cidade`, `id_estado`) VALUES
@@ -145,7 +162,7 @@ INSERT INTO `cidades` (`id_cidade`, `nome_cidade`, `id_estado`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `clientes`
+-- Estrutura para tabela `clientes`
 --
 
 DROP TABLE IF EXISTS `clientes`;
@@ -155,7 +172,7 @@ CREATE TABLE `clientes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `clientes`
+-- Despejando dados para a tabela `clientes`
 --
 
 INSERT INTO `clientes` (`id_cliente`, `id_dado`) VALUES
@@ -164,7 +181,7 @@ INSERT INTO `clientes` (`id_cliente`, `id_dado`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `dados_pessoais`
+-- Estrutura para tabela `dados_pessoais`
 --
 
 DROP TABLE IF EXISTS `dados_pessoais`;
@@ -177,7 +194,7 @@ CREATE TABLE `dados_pessoais` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `dados_pessoais`
+-- Despejando dados para a tabela `dados_pessoais`
 --
 
 INSERT INTO `dados_pessoais` (`id_dado`, `cpf`, `nome`, `email`, `id_endereco`) VALUES
@@ -189,7 +206,7 @@ INSERT INTO `dados_pessoais` (`id_dado`, `cpf`, `nome`, `email`, `id_endereco`) 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `enderecos`
+-- Estrutura para tabela `enderecos`
 --
 
 DROP TABLE IF EXISTS `enderecos`;
@@ -201,7 +218,7 @@ CREATE TABLE `enderecos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `enderecos`
+-- Despejando dados para a tabela `enderecos`
 --
 
 INSERT INTO `enderecos` (`id_endereco`, `rua`, `cep`, `id_bairro`) VALUES
@@ -213,7 +230,7 @@ INSERT INTO `enderecos` (`id_endereco`, `rua`, `cep`, `id_bairro`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `estados`
+-- Estrutura para tabela `estados`
 --
 
 DROP TABLE IF EXISTS `estados`;
@@ -224,7 +241,7 @@ CREATE TABLE `estados` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `estados`
+-- Despejando dados para a tabela `estados`
 --
 
 INSERT INTO `estados` (`id_estado`, `nome_estado`, `uf`) VALUES
@@ -233,7 +250,7 @@ INSERT INTO `estados` (`id_estado`, `nome_estado`, `uf`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `funcionarios`
+-- Estrutura para tabela `funcionarios`
 --
 
 DROP TABLE IF EXISTS `funcionarios`;
@@ -245,7 +262,7 @@ CREATE TABLE `funcionarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `funcionarios`
+-- Despejando dados para a tabela `funcionarios`
 --
 
 INSERT INTO `funcionarios` (`id_funcionario`, `id_dado`, `cargo`, `data_admissao`) VALUES
@@ -256,7 +273,7 @@ INSERT INTO `funcionarios` (`id_funcionario`, `id_dado`, `cargo`, `data_admissao
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `itens_venda`
+-- Estrutura para tabela `itens_venda`
 --
 
 DROP TABLE IF EXISTS `itens_venda`;
@@ -271,7 +288,7 @@ CREATE TABLE `itens_venda` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `manutencao`
+-- Estrutura para tabela `manutencao`
 --
 
 DROP TABLE IF EXISTS `manutencao`;
@@ -286,7 +303,7 @@ CREATE TABLE `manutencao` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `marcas`
+-- Estrutura para tabela `marcas`
 --
 
 DROP TABLE IF EXISTS `marcas`;
@@ -296,7 +313,7 @@ CREATE TABLE `marcas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `marcas`
+-- Despejando dados para a tabela `marcas`
 --
 
 INSERT INTO `marcas` (`id_marca`, `nome_marca`) VALUES
@@ -320,12 +337,14 @@ INSERT INTO `marcas` (`id_marca`, `nome_marca`) VALUES
 (18, 'Moove'),
 (19, 'DEKO'),
 (20, 'Touch Screedew'),
-(21, 'HUPI');
+(21, 'HUPI'),
+(22, 'Ultra Bikes'),
+(23, 'Sunrun');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `ofertas`
+-- Estrutura para tabela `ofertas`
 --
 
 DROP TABLE IF EXISTS `ofertas`;
@@ -343,7 +362,7 @@ CREATE TABLE `ofertas` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `pecas`
+-- Estrutura para tabela `pecas`
 --
 
 DROP TABLE IF EXISTS `pecas`;
@@ -356,7 +375,7 @@ CREATE TABLE `pecas` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `servicos`
+-- Estrutura para tabela `servicos`
 --
 
 DROP TABLE IF EXISTS `servicos`;
@@ -370,7 +389,7 @@ CREATE TABLE `servicos` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `servico_manutencao`
+-- Estrutura para tabela `servico_manutencao`
 --
 
 DROP TABLE IF EXISTS `servico_manutencao`;
@@ -385,7 +404,7 @@ CREATE TABLE `servico_manutencao` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `telefones`
+-- Estrutura para tabela `telefones`
 --
 
 DROP TABLE IF EXISTS `telefones`;
@@ -399,7 +418,7 @@ CREATE TABLE `telefones` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuarios`
+-- Estrutura para tabela `usuarios`
 --
 
 DROP TABLE IF EXISTS `usuarios`;
@@ -412,7 +431,7 @@ CREATE TABLE `usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `usuarios`
+-- Despejando dados para a tabela `usuarios`
 --
 
 INSERT INTO `usuarios` (`id_usuario`, `id_dado`, `senha_hash`, `criado_em`, `tipo`) VALUES
@@ -424,7 +443,7 @@ INSERT INTO `usuarios` (`id_usuario`, `id_dado`, `senha_hash`, `criado_em`, `tip
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `vendas`
+-- Estrutura para tabela `vendas`
 --
 
 DROP TABLE IF EXISTS `vendas`;
@@ -439,24 +458,24 @@ CREATE TABLE `vendas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Índices para tablas volcadas
+-- Índices para tabelas despejadas
 --
 
 --
--- Indices de la tabla `bairros`
+-- Índices de tabela `bairros`
 --
 ALTER TABLE `bairros`
   ADD PRIMARY KEY (`id_bairro`),
   ADD KEY `id_cidade` (`id_cidade`);
 
 --
--- Indices de la tabla `categorias`
+-- Índices de tabela `categorias`
 --
 ALTER TABLE `categorias`
   ADD PRIMARY KEY (`id_categoria`);
 
 --
--- Indices de la tabla `cicloprodutos`
+-- Índices de tabela `cicloprodutos`
 --
 ALTER TABLE `cicloprodutos`
   ADD PRIMARY KEY (`id`),
@@ -464,21 +483,21 @@ ALTER TABLE `cicloprodutos`
   ADD KEY `fk_cicloprodutos_categorias` (`id_categoria`);
 
 --
--- Indices de la tabla `cidades`
+-- Índices de tabela `cidades`
 --
 ALTER TABLE `cidades`
   ADD PRIMARY KEY (`id_cidade`),
   ADD KEY `id_estado` (`id_estado`);
 
 --
--- Indices de la tabla `clientes`
+-- Índices de tabela `clientes`
 --
 ALTER TABLE `clientes`
   ADD PRIMARY KEY (`id_cliente`),
   ADD UNIQUE KEY `id_dado` (`id_dado`);
 
 --
--- Indices de la tabla `dados_pessoais`
+-- Índices de tabela `dados_pessoais`
 --
 ALTER TABLE `dados_pessoais`
   ADD PRIMARY KEY (`id_dado`),
@@ -486,27 +505,27 @@ ALTER TABLE `dados_pessoais`
   ADD KEY `id_endereco` (`id_endereco`);
 
 --
--- Indices de la tabla `enderecos`
+-- Índices de tabela `enderecos`
 --
 ALTER TABLE `enderecos`
   ADD PRIMARY KEY (`id_endereco`),
   ADD KEY `id_bairro` (`id_bairro`);
 
 --
--- Indices de la tabla `estados`
+-- Índices de tabela `estados`
 --
 ALTER TABLE `estados`
   ADD PRIMARY KEY (`id_estado`);
 
 --
--- Indices de la tabla `funcionarios`
+-- Índices de tabela `funcionarios`
 --
 ALTER TABLE `funcionarios`
   ADD PRIMARY KEY (`id_funcionario`),
   ADD UNIQUE KEY `id_dado` (`id_dado`);
 
 --
--- Indices de la tabla `itens_venda`
+-- Índices de tabela `itens_venda`
 --
 ALTER TABLE `itens_venda`
   ADD PRIMARY KEY (`id_item`),
@@ -514,189 +533,189 @@ ALTER TABLE `itens_venda`
   ADD KEY `itens_venda_ibfk_2` (`id`);
 
 --
--- Indices de la tabla `manutencao`
+-- Índices de tabela `manutencao`
 --
 ALTER TABLE `manutencao`
   ADD PRIMARY KEY (`id_manutencao`),
   ADD KEY `id_cliente` (`id_cliente`);
 
 --
--- Indices de la tabla `marcas`
+-- Índices de tabela `marcas`
 --
 ALTER TABLE `marcas`
   ADD PRIMARY KEY (`id_marca`);
 
 --
--- Indices de la tabla `ofertas`
+-- Índices de tabela `ofertas`
 --
 ALTER TABLE `ofertas`
   ADD PRIMARY KEY (`id_oferta`),
   ADD KEY `id_produto` (`id_produto`);
 
 --
--- Indices de la tabla `pecas`
+-- Índices de tabela `pecas`
 --
 ALTER TABLE `pecas`
   ADD PRIMARY KEY (`id_peca`);
 
 --
--- Indices de la tabla `servicos`
+-- Índices de tabela `servicos`
 --
 ALTER TABLE `servicos`
   ADD PRIMARY KEY (`id_servico`);
 
 --
--- Indices de la tabla `servico_manutencao`
+-- Índices de tabela `servico_manutencao`
 --
 ALTER TABLE `servico_manutencao`
   ADD PRIMARY KEY (`id_manutencao`,`id_servico`),
   ADD KEY `idx_servico_manutencao_servico` (`id_servico`);
 
 --
--- Indices de la tabla `telefones`
+-- Índices de tabela `telefones`
 --
 ALTER TABLE `telefones`
   ADD PRIMARY KEY (`id_telefone`),
   ADD KEY `id_dado` (`id_dado`);
 
 --
--- Indices de la tabla `usuarios`
+-- Índices de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id_usuario`),
   ADD UNIQUE KEY `id_dado` (`id_dado`);
 
 --
--- Indices de la tabla `vendas`
+-- Índices de tabela `vendas`
 --
 ALTER TABLE `vendas`
   ADD PRIMARY KEY (`id_venda`),
   ADD KEY `id_cliente` (`id_cliente`);
 
 --
--- AUTO_INCREMENT de las tablas volcadas
+-- AUTO_INCREMENT para tabelas despejadas
 --
 
 --
--- AUTO_INCREMENT de la tabla `bairros`
+-- AUTO_INCREMENT de tabela `bairros`
 --
 ALTER TABLE `bairros`
   MODIFY `id_bairro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT de la tabla `categorias`
+-- AUTO_INCREMENT de tabela `categorias`
 --
 ALTER TABLE `categorias`
   MODIFY `id_categoria` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT de la tabla `cicloprodutos`
+-- AUTO_INCREMENT de tabela `cicloprodutos`
 --
 ALTER TABLE `cicloprodutos`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
--- AUTO_INCREMENT de la tabla `cidades`
+-- AUTO_INCREMENT de tabela `cidades`
 --
 ALTER TABLE `cidades`
   MODIFY `id_cidade` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT de la tabla `clientes`
+-- AUTO_INCREMENT de tabela `clientes`
 --
 ALTER TABLE `clientes`
   MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT de la tabla `dados_pessoais`
+-- AUTO_INCREMENT de tabela `dados_pessoais`
 --
 ALTER TABLE `dados_pessoais`
   MODIFY `id_dado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT de la tabla `enderecos`
+-- AUTO_INCREMENT de tabela `enderecos`
 --
 ALTER TABLE `enderecos`
   MODIFY `id_endereco` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT de la tabla `estados`
+-- AUTO_INCREMENT de tabela `estados`
 --
 ALTER TABLE `estados`
   MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT de la tabla `funcionarios`
+-- AUTO_INCREMENT de tabela `funcionarios`
 --
 ALTER TABLE `funcionarios`
   MODIFY `id_funcionario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT de la tabla `itens_venda`
+-- AUTO_INCREMENT de tabela `itens_venda`
 --
 ALTER TABLE `itens_venda`
   MODIFY `id_item` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `manutencao`
+-- AUTO_INCREMENT de tabela `manutencao`
 --
 ALTER TABLE `manutencao`
   MODIFY `id_manutencao` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `marcas`
+-- AUTO_INCREMENT de tabela `marcas`
 --
 ALTER TABLE `marcas`
   MODIFY `id_marca` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
--- AUTO_INCREMENT de la tabla `ofertas`
+-- AUTO_INCREMENT de tabela `ofertas`
 --
 ALTER TABLE `ofertas`
   MODIFY `id_oferta` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `pecas`
+-- AUTO_INCREMENT de tabela `pecas`
 --
 ALTER TABLE `pecas`
   MODIFY `id_peca` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `servicos`
+-- AUTO_INCREMENT de tabela `servicos`
 --
 ALTER TABLE `servicos`
   MODIFY `id_servico` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `telefones`
+-- AUTO_INCREMENT de tabela `telefones`
 --
 ALTER TABLE `telefones`
   MODIFY `id_telefone` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `usuarios`
+-- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
   MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT de la tabla `vendas`
+-- AUTO_INCREMENT de tabela `vendas`
 --
 ALTER TABLE `vendas`
   MODIFY `id_venda` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Restricciones para tablas volcadas
+-- Restrições para tabelas despejadas
 --
 
 --
--- Filtros para la tabla `bairros`
+-- Restrições para tabelas `bairros`
 --
 ALTER TABLE `bairros`
   ADD CONSTRAINT `bairros_ibfk_1` FOREIGN KEY (`id_cidade`) REFERENCES `cidades` (`id_cidade`);
 
 --
--- Filtros para la tabla `cicloprodutos`
+-- Restrições para tabelas `cicloprodutos`
 --
 ALTER TABLE `cicloprodutos`
   ADD CONSTRAINT `fk_cicloprodutos_categorias` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id_categoria`) ON UPDATE CASCADE,
@@ -704,75 +723,75 @@ ALTER TABLE `cicloprodutos`
   ADD CONSTRAINT `fk_produtos_marca` FOREIGN KEY (`id_marca`) REFERENCES `marcas` (`id_marca`);
 
 --
--- Filtros para la tabla `cidades`
+-- Restrições para tabelas `cidades`
 --
 ALTER TABLE `cidades`
   ADD CONSTRAINT `cidades_ibfk_1` FOREIGN KEY (`id_estado`) REFERENCES `estados` (`id_estado`);
 
 --
--- Filtros para la tabla `clientes`
+-- Restrições para tabelas `clientes`
 --
 ALTER TABLE `clientes`
   ADD CONSTRAINT `clientes_ibfk_1` FOREIGN KEY (`id_dado`) REFERENCES `dados_pessoais` (`id_dado`);
 
 --
--- Filtros para la tabla `dados_pessoais`
+-- Restrições para tabelas `dados_pessoais`
 --
 ALTER TABLE `dados_pessoais`
   ADD CONSTRAINT `dados_pessoais_ibfk_1` FOREIGN KEY (`id_endereco`) REFERENCES `enderecos` (`id_endereco`);
 
 --
--- Filtros para la tabla `enderecos`
+-- Restrições para tabelas `enderecos`
 --
 ALTER TABLE `enderecos`
   ADD CONSTRAINT `enderecos_ibfk_1` FOREIGN KEY (`id_bairro`) REFERENCES `bairros` (`id_bairro`);
 
 --
--- Filtros para la tabla `funcionarios`
+-- Restrições para tabelas `funcionarios`
 --
 ALTER TABLE `funcionarios`
   ADD CONSTRAINT `funcionarios_ibfk_1` FOREIGN KEY (`id_dado`) REFERENCES `dados_pessoais` (`id_dado`);
 
 --
--- Filtros para la tabla `itens_venda`
+-- Restrições para tabelas `itens_venda`
 --
 ALTER TABLE `itens_venda`
   ADD CONSTRAINT `itens_venda_ibfk_1` FOREIGN KEY (`id_venda`) REFERENCES `vendas` (`id_venda`),
   ADD CONSTRAINT `itens_venda_ibfk_2` FOREIGN KEY (`id`) REFERENCES `cicloprodutos` (`id`);
 
 --
--- Filtros para la tabla `manutencao`
+-- Restrições para tabelas `manutencao`
 --
 ALTER TABLE `manutencao`
   ADD CONSTRAINT `manutencao_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`);
 
 --
--- Filtros para la tabla `ofertas`
+-- Restrições para tabelas `ofertas`
 --
 ALTER TABLE `ofertas`
   ADD CONSTRAINT `ofertas_ibfk_1` FOREIGN KEY (`id_produto`) REFERENCES `cicloprodutos` (`id`);
 
 --
--- Filtros para la tabla `servico_manutencao`
+-- Restrições para tabelas `servico_manutencao`
 --
 ALTER TABLE `servico_manutencao`
   ADD CONSTRAINT `fk_servico_manutencao_manutencao` FOREIGN KEY (`id_manutencao`) REFERENCES `manutencao` (`id_manutencao`),
   ADD CONSTRAINT `fk_servico_manutencao_servico` FOREIGN KEY (`id_servico`) REFERENCES `servicos` (`id_servico`);
 
 --
--- Filtros para la tabla `telefones`
+-- Restrições para tabelas `telefones`
 --
 ALTER TABLE `telefones`
   ADD CONSTRAINT `telefones_ibfk_1` FOREIGN KEY (`id_dado`) REFERENCES `dados_pessoais` (`id_dado`);
 
 --
--- Filtros para la tabla `usuarios`
+-- Restrições para tabelas `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD CONSTRAINT `usuarios_ibfk_1` FOREIGN KEY (`id_dado`) REFERENCES `dados_pessoais` (`id_dado`);
 
 --
--- Filtros para la tabla `vendas`
+-- Restrições para tabelas `vendas`
 --
 ALTER TABLE `vendas`
   ADD CONSTRAINT `vendas_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`);
