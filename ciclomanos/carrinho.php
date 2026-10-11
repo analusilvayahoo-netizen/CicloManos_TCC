@@ -13,22 +13,13 @@ $idCliente = (int) $_SESSION['id_cliente'];
 $acao = $_GET['acao'] ?? '';
 $idProd = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// Adicionar ao Carrinho (Salva no Banco)
+// Adicionar ao Carrinho compatível com a restrição uk_carrinho_cliente_produto do SQL
 if ($acao === 'add' && $idProd > 0) {
-    $stmtCheck = mysqli_prepare($conn, "SELECT id, quantidade FROM carrinho WHERE id_cliente = ? AND id_produto = ?");
-    mysqli_stmt_bind_param($stmtCheck, 'ii', $idCliente, $idProd);
-    mysqli_stmt_execute($stmtCheck);
-    $resCheck = mysqli_stmt_get_result($stmtCheck);
-
-    if ($rowCheck = mysqli_fetch_assoc($resCheck)) {
-        $novaQtd = $rowCheck['quantidade'] + 1;
-        $stmtUp = mysqli_prepare($conn, "UPDATE carrinho SET quantidade = ? WHERE id = ?");
-        mysqli_stmt_bind_param($stmtUp, 'ii', $novaQtd, $rowCheck['id']);
-        mysqli_stmt_execute($stmtUp);
-    } else {
-        $stmtIns = mysqli_prepare($conn, "INSERT INTO carrinho (id_cliente, id_produto, quantidade) VALUES (?, ?, 1)");
-        mysqli_stmt_bind_param($stmtIns, 'ii', $idCliente, $idProd);
-        mysqli_stmt_execute($stmtIns);
+    $stmt = mysqli_prepare($conn, "INSERT INTO carrinho (id_cliente, id_produto, quantidade) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE quantidade = quantidade + 1");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 'ii', $idCliente, $idProd);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
     }
     header('Location: carrinho.php');
     exit;
@@ -37,8 +28,11 @@ if ($acao === 'add' && $idProd > 0) {
 // Remover do Carrinho
 if ($acao === 'remover' && $idProd > 0) {
     $stmtRem = mysqli_prepare($conn, "DELETE FROM carrinho WHERE id_cliente = ? AND id_produto = ?");
-    mysqli_stmt_bind_param($stmtRem, 'ii', $idCliente, $idProd);
-    mysqli_stmt_execute($stmtRem);
+    if ($stmtRem) {
+        mysqli_stmt_bind_param($stmtRem, 'ii', $idCliente, $idProd);
+        mysqli_stmt_execute($stmtRem);
+        mysqli_stmt_close($stmtRem);
+    }
     header('Location: carrinho.php');
     exit;
 }
@@ -58,7 +52,6 @@ if ($acao === 'finalizar') {
             mysqli_stmt_execute($stmtVenda);
             mysqli_stmt_close($stmtVenda);
         }
-        // Limpa o carrinho do banco após a compra
         mysqli_query($conn, "DELETE FROM carrinho WHERE id_cliente = $idCliente");
         $mensagemSucesso = "Compra efetuada com sucesso!";
     }

@@ -13,17 +13,13 @@ $idCliente = (int) $_SESSION['id_cliente'];
 $acao = $_GET['acao'] ?? '';
 $idProd = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// Adicionar Aos Favoritos (Salva no Banco)
+// Adicionar Aos Favoritos compatível com a restrição uk_favorito_cliente_produto do SQL
 if ($acao === 'add' && $idProd > 0) {
-    $stmtCheck = mysqli_prepare($conn, "SELECT id FROM favoritos WHERE id_cliente = ? AND id_produto = ?");
-    mysqli_stmt_bind_param($stmtCheck, 'ii', $idCliente, $idProd);
-    mysqli_stmt_execute($stmtCheck);
-    $resCheck = mysqli_stmt_get_result($stmtCheck);
-
-    if (mysqli_num_rows($resCheck) === 0) {
-        $stmtIns = mysqli_prepare($conn, "INSERT INTO favoritos (id_cliente, id_produto) VALUES (?, ?)");
+    $stmtIns = mysqli_prepare($conn, "INSERT IGNORE INTO favoritos (id_cliente, id_produto) VALUES (?, ?)");
+    if ($stmtIns) {
         mysqli_stmt_bind_param($stmtIns, 'ii', $idCliente, $idProd);
         mysqli_stmt_execute($stmtIns);
+        mysqli_stmt_close($stmtIns);
     }
     header('Location: favoritos.php');
     exit;
@@ -32,8 +28,11 @@ if ($acao === 'add' && $idProd > 0) {
 // Remover dos Favoritos
 if ($acao === 'remover' && $idProd > 0) {
     $stmtRem = mysqli_prepare($conn, "DELETE FROM favoritos WHERE id_cliente = ? AND id_produto = ?");
-    mysqli_stmt_bind_param($stmtRem, 'ii', $idCliente, $idProd);
-    mysqli_stmt_execute($stmtRem);
+    if ($stmtRem) {
+        mysqli_stmt_bind_param($stmtRem, 'ii', $idCliente, $idProd);
+        mysqli_stmt_execute($stmtRem);
+        mysqli_stmt_close($stmtRem);
+    }
     header('Location: favoritos.php');
     exit;
 }
