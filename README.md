@@ -84,6 +84,7 @@ http://localhost/ciclomanos/Index.php
 
  👥 Autoria
 
+Estudantes: Ana Luiza Silva Carmo Gouvêa, Igor Augusto, Lucas Henrique, Maria Júlia Moura Conde e Maria Luiza Barbosa Maciel.
 Projeto desenvolvido para fins académicos no âmbito do Trabalho de Conclusão de Curso (TCC) em Desenvolvimento de Sistemas / Software Engineering.
 
 © 2026 CicloManos. Todos os direitos reservados.
