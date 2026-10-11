@@ -1,660 +1,190 @@
 <?php
-
 session_start();
-
 include 'config.php';
+if (!isset($conn) && isset($conexao)) { $conn = $conexao; }
+if (!$conn) { die("Erro: Conexão com a base de dados não encontrada."); }
 
-
-/* =========================================================
-   INICIA O CARRINHO
-========================================================= */
-
-if (!isset($_SESSION['carrinho'])) {
-    $_SESSION['carrinho'] = [];
+if (($_SESSION['tipo_usuario'] ?? '') !== 'cliente' || empty($_SESSION['id_cliente'])) {
+    header('Location: login.php');
+    exit;
 }
 
+$idCliente = (int) $_SESSION['id_cliente'];
+$acao = $_GET['acao'] ?? '';
+$idProd = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-/* =========================================================
-   ADICIONAR PRODUTO
-========================================================= */
+// Adicionar ao Carrinho (Salva no Banco)
+if ($acao === 'add' && $idProd > 0) {
+    $stmtCheck = mysqli_prepare($conn, "SELECT id, quantidade FROM carrinho WHERE id_cliente = ? AND id_produto = ?");
+    mysqli_stmt_bind_param($stmtCheck, 'ii', $idCliente, $idProd);
+    mysqli_stmt_execute($stmtCheck);
+    $resCheck = mysqli_stmt_get_result($stmtCheck);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar'])) {
+    if ($rowCheck = mysqli_fetch_assoc($resCheck)) {
+        $novaQtd = $rowCheck['quantidade'] + 1;
+        $stmtUp = mysqli_prepare($conn, "UPDATE carrinho SET quantidade = ? WHERE id = ?");
+        mysqli_stmt_bind_param($stmtUp, 'ii', $novaQtd, $rowCheck['id']);
+        mysqli_stmt_execute($stmtUp);
+    } else {
+        $stmtIns = mysqli_prepare($conn, "INSERT INTO carrinho (id_cliente, id_produto, quantidade) VALUES (?, ?, 1)");
+        mysqli_stmt_bind_param($stmtIns, 'ii', $idCliente, $idProd);
+        mysqli_stmt_execute($stmtIns);
+    }
+    header('Location: carrinho.php');
+    exit;
+}
 
-    $id = filter_input(
-        INPUT_POST,
-        'id',
-        FILTER_VALIDATE_INT
-    );
+// Remover do Carrinho
+if ($acao === 'remover' && $idProd > 0) {
+    $stmtRem = mysqli_prepare($conn, "DELETE FROM carrinho WHERE id_cliente = ? AND id_produto = ?");
+    mysqli_stmt_bind_param($stmtRem, 'ii', $idCliente, $idProd);
+    mysqli_stmt_execute($stmtRem);
+    header('Location: carrinho.php');
+    exit;
+}
 
-    if ($id !== false && $id !== null) {
+// Finalizar Compra
+if ($acao === 'finalizar') {
+    $resItens = mysqli_query($conn, "SELECT c.quantidade, p.preco_venda FROM carrinho c INNER JOIN cicloprodutos p ON c.id_produto = p.id WHERE c.id_cliente = $idCliente");
+    $totalVenda = 0;
+    while ($item = mysqli_fetch_assoc($resItens)) {
+        $totalVenda += ((float)$item['preco_venda'] * (int)$item['quantidade']);
+    }
 
-        $sql = "
-            SELECT
-                id,
-                produto,
-                descricao,
-                imagem,
-                preco_venda
-            FROM cicloprodutos
-            WHERE id = ?
-        ";
-
-        $stmt = mysqli_prepare($conn, $sql);
-
-        mysqli_stmt_bind_param(
-            $stmt,
-            "i",
-            $id
-        );
-
-        mysqli_stmt_execute($stmt);
-
-        $resultado = mysqli_stmt_get_result($stmt);
-
-        $produto = mysqli_fetch_assoc($resultado);
-
-
-        if ($produto) {
-
-            if (isset($_SESSION['carrinho'][$id])) {
-
-                $_SESSION['carrinho'][$id]['quantidade']++;
-
-            } else {
-
-                $_SESSION['carrinho'][$id] = [
-
-                    'id' => (int)$produto['id'],
-
-                    'produto' => $produto['produto'],
-
-                    'descricao' => $produto['descricao'],
-
-                    'imagem' => $produto['imagem'],
-
-                    'preco' => (float)$produto['preco_venda'],
-
-                    'quantidade' => 1
-
-                ];
-            }
+    if ($totalVenda > 0) {
+        $stmtVenda = mysqli_prepare($conn, "INSERT INTO vendas (id_cliente, data, valor_total, status_pagamento) VALUES (?, NOW(), ?, 'pago')");
+        if ($stmtVenda) {
+            mysqli_stmt_bind_param($stmtVenda, 'id', $idCliente, $totalVenda);
+            mysqli_stmt_execute($stmtVenda);
+            mysqli_stmt_close($stmtVenda);
         }
-
-        mysqli_stmt_close($stmt);
+        // Limpa o carrinho do banco após a compra
+        mysqli_query($conn, "DELETE FROM carrinho WHERE id_cliente = $idCliente");
+        $mensagemSucesso = "Compra efetuada com sucesso!";
     }
-
-
-    header('Location: carrinho.php');
-
-    exit;
 }
-
-
-/* =========================================================
-   AUMENTAR QUANTIDADE
-========================================================= */
-
-if (
-    $_SERVER['REQUEST_METHOD'] === 'POST'
-    && isset($_POST['aumentar'])
-) {
-
-    $id = filter_input(
-        INPUT_POST,
-        'id',
-        FILTER_VALIDATE_INT
-    );
-
-    if (
-        $id !== false &&
-        $id !== null &&
-        isset($_SESSION['carrinho'][$id])
-    ) {
-
-        $_SESSION['carrinho'][$id]['quantidade']++;
-    }
-
-
-    header('Location: carrinho.php');
-
-    exit;
-}
-
-
-/* =========================================================
-   DIMINUIR QUANTIDADE
-========================================================= */
-
-if (
-    $_SERVER['REQUEST_METHOD'] === 'POST'
-    && isset($_POST['diminuir'])
-) {
-
-    $id = filter_input(
-        INPUT_POST,
-        'id',
-        FILTER_VALIDATE_INT
-    );
-
-    if (
-        $id !== false &&
-        $id !== null &&
-        isset($_SESSION['carrinho'][$id])
-    ) {
-
-        $_SESSION['carrinho'][$id]['quantidade']--;
-
-
-        if ($_SESSION['carrinho'][$id]['quantidade'] <= 0) {
-
-            unset($_SESSION['carrinho'][$id]);
-        }
-    }
-
-
-    header('Location: carrinho.php');
-
-    exit;
-}
-
-
-/* =========================================================
-   REMOVER
-========================================================= */
-
-if (
-    $_SERVER['REQUEST_METHOD'] === 'POST'
-    && isset($_POST['remover'])
-) {
-
-    $id = filter_input(
-        INPUT_POST,
-        'id',
-        FILTER_VALIDATE_INT
-    );
-
-    if (
-        $id !== false &&
-        $id !== null
-    ) {
-
-        unset($_SESSION['carrinho'][$id]);
-    }
-
-
-    header('Location: carrinho.php');
-
-    exit;
-}
-
-
-/* =========================================================
-   LIMPAR CARRINHO
-========================================================= */
-
-if (
-    $_SERVER['REQUEST_METHOD'] === 'POST'
-    && isset($_POST['limpar'])
-) {
-
-    $_SESSION['carrinho'] = [];
-
-    header('Location: carrinho.php');
-
-    exit;
-}
-
-
-/* =========================================================
-   TOTAL
-========================================================= */
-
-$total = 0;
-
-foreach ($_SESSION['carrinho'] as $produto) {
-
-    $total +=
-        $produto['preco']
-        *
-        $produto['quantidade'];
-}
-
-
 ?>
-
 <!DOCTYPE html>
-
 <html lang="pt-br">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<title>Carrinho - CicloManos</title>
-
-<link
-    rel="stylesheet"
-    href="carrinho.css"
->
-
+    <meta charset="UTF-8">
+    <title>Carrinho - CicloManos</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { font-family: Arial, sans-serif; background: #f7f7f7; color: #222; min-height: 100vh; display: flex; flex-direction: column; }
+        .main-content { flex: 1; padding: 40px 0; }
+        .cart-box { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); }
+        footer { background: #111; color: #aaa; text-align: center; padding: 22px; font-size: 12px; margin-top: auto; }
+    </style>
 </head>
-
-
 <body>
 
-
-<div class="topo">
-
-<a href="#">
-📍 Rastreie seu pedido
-</a>
-
-<a href="#">
-💬 Fale conosco
-</a>
-
-<span>
-📱 WhatsApp: (12) 3916-3262
-</span>
-
-<span>
-📞 Telefone: (12) 3916-3262
-</span>
-
+<div class="topo-cinza">
+    <a href="https://share.google/jYgrtVLyebEBGaqzt" target="_blank">📍 Localização</a>
+    <a href="https://wa.me/551239163262?text=Olá!%20Vim%20pelo%20site%20da%20CicloManos" target="_blank">💬 Fale conosco</a>
+    <a href="https://wa.me/551239163262" target="_blank">📱 WhatsApp: (12) 3916-3262</a>
+    <span>📞 Telefone: (12) 3916-3262</span>
 </div>
 
+<header class="meio-header">
+    <a href="Index.php"><img src="tcc/logo.jpg" class="logo" alt="Logo CicloManos"></a>
+    <form class="busca" method="GET" action="Index.php">
+        <input type="text" name="busca" placeholder="Digite o que você procura">
+        <button type="submit">Buscar</button>
+    </form>
+    <div class="usuario">
+        <a href="minha_conta.php">👤 Olá, <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Cliente', ENT_QUOTES, 'UTF-8') ?>!</a>
+        <a href="favoritos.php">⭐ Favoritos</a>
+        <a href="carrinho.php">🛒 Carrinho</a>
+        <a href="logout.php">🚪 Sair</a>
+    </div>
+</header>
 
-<div class="meio-header">
-
-<a href="ciclomanos.php">
-
-<img
-    src="tcc/logo.jpg"
-    class="logo"
-    alt="CicloManos"
->
-
-</a>
-
-
-<div class="usuario">
-
-<a href="login.php">
-👤 Conta
-</a>
-
-<a href="carrinho.php">
-🛒 Carrinho
-</a>
-
+<div class="menu-bar">
+    <div class="produtos-menu">
+        <button type="button" class="botao-produtos" onclick="abrirProdutos()">☰ Produtos</button>
+        <div id="caixa-produtos" class="caixa-produtos">
+            <a href="acessorios.php">Acessórios</a>
+            <a href="pecas.php">Peças</a>
+            <a href="bicicletas.php">Bicicletas</a>
+        </div>
+    </div>
+    <nav>
+        <a href="manutencao.php">Manutenção</a>
+        <a href="ofertas.php">Ofertas</a>
+    </nav>
 </div>
 
-</div>
-
-
-<div class="menu">
-
-<a
-    href="departamentos.html"
-    class="departamentos"
->
-☰ Departamentos
-</a>
-
-
-<nav>
-
-<a href="acessorios.html">
-Acessórios
-</a>
-
-<a href="bicicletas.html">
-Bicicletas
-</a>
-
-<a href="pecas.html">
-Peças
-</a>
-
-<a href="manutencao.php">
-Manutenção
-</a>
-
-<a href="ofertas.html">
-Ofertas
-</a>
-
-</nav>
-
-</div>
-
-
-<main class="carrinho-area">
-
-<div class="carrinho-container">
-
-
-<h1>
-🛒 Meu Carrinho
-</h1>
-
-
-<?php if (empty($_SESSION['carrinho'])): ?>
-
-
-<div class="carrinho-vazio">
-
-<h2>
-Seu carrinho está vazio
-</h2>
-
-<p>
-Adicione produtos para começar sua compra.
-</p>
-
-<a
-    href="ciclomanos.php"
-    class="botao-comprar"
->
-Continuar comprando
-</a>
-
-</div>
-
-
-<?php else: ?>
-
-
-<div class="conteudo-carrinho">
-
-
-<div class="produtos-carrinho">
-
-
-<?php foreach ($_SESSION['carrinho'] as $produto): ?>
-
-
-<div class="produto-carrinho">
-
-
-<div class="produto-imagem">
-
-<img
-    src="<?php echo htmlspecialchars($produto['imagem']); ?>"
-    alt="<?php echo htmlspecialchars($produto['produto']); ?>"
->
-
-</div>
-
-
-<div class="produto-info">
-
-<h2>
-
-<?php
-echo htmlspecialchars(
-    $produto['produto']
-);
-?>
-
-</h2>
-
-
-<p class="preco">
-
-R$
-
-<?php
-
-echo number_format(
-    $produto['preco'],
-    2,
-    ',',
-    '.'
-);
-
-?>
-
-</p>
-
-
-<div class="produto-acoes">
-
-
-<div class="quantidade">
-
-
-<form method="POST">
-
-<input
-    type="hidden"
-    name="id"
-    value="<?php echo $produto['id']; ?>"
->
-
-<button
-    type="submit"
-    name="diminuir"
->
-−
-</button>
-
-</form>
-
-
-<span>
-
-<?php
-echo $produto['quantidade'];
-?>
-
-</span>
-
-
-<form method="POST">
-
-<input
-    type="hidden"
-    name="id"
-    value="<?php echo $produto['id']; ?>"
->
-
-<button
-    type="submit"
-    name="aumentar"
->
-+
-</button>
-
-</form>
-
-
-</div>
-
-
-<form method="POST">
-
-<input
-    type="hidden"
-    name="id"
-    value="<?php echo $produto['id']; ?>"
->
-
-<button
-    type="submit"
-    name="remover"
-    class="remover"
->
-🗑 Remover
-</button>
-
-</form>
-
-
-</div>
-
-</div>
-
-
-<div class="produto-total">
-
-R$
-
-<?php
-
-$subtotalProduto =
-    $produto['preco']
-    *
-    $produto['quantidade'];
-
-echo number_format(
-    $subtotalProduto,
-    2,
-    ',',
-    '.'
-);
-
-?>
-
-</div>
-
-
-</div>
-
-
-<?php endforeach; ?>
-
-
-<form
-    method="POST"
-    class="limpar-form"
->
-
-<button
-    type="submit"
-    name="limpar"
-    class="limpar"
->
-Esvaziar carrinho
-</button>
-
-</form>
-
-
-</div>
-
-
-<aside class="resumo">
-
-<h2>
-Resumo da compra
-</h2>
-
-
-<div class="resumo-linha">
-
-<span>
-Subtotal
-</span>
-
-<strong>
-
-R$
-
-<?php
-
-echo number_format(
-    $total,
-    2,
-    ',',
-    '.'
-);
-
-?>
-
-</strong>
-
-</div>
-
-
-<div class="resumo-linha">
-
-<span>
-Frete
-</span>
-
-<strong>
-Grátis
-</strong>
-
-</div>
-
-
-<hr>
-
-
-<div class="resumo-total">
-
-<span>
-Total
-</span>
-
-<strong>
-
-R$
-
-<?php
-
-echo number_format(
-    $total,
-    2,
-    ',',
-    '.'
-);
-
-?>
-
-</strong>
-
-</div>
-
-
-<button
-    type="button"
-    class="finalizar"
->
-Finalizar compra
-</button>
-
-
-</aside>
-
-
-</div>
-
-
-<?php endif; ?>
-
-
-</div>
-
+<main class="main-content">
+    <div class="container">
+        <div class="mb-4">
+            <a href="Index.php" class="btn btn-secondary">← Voltar para a página inicial</a>
+        </div>
+        <div class="cart-box">
+            <h2 class="mb-4 fw-bold">🛒 Seu Carrinho de Compras</h2>
+            
+            <?php if (isset($mensagemSucesso)): ?>
+                <div class="alert alert-success"><h3><?= $mensagemSucesso ?></h3></div>
+                <a href="Index.php" class="btn btn-primary mt-2">Continuar comprando</a>
+            <?php else: 
+                $resCarrinho = mysqli_query($conn, "SELECT c.id_produto, c.quantidade, p.produto, p.preco_venda, p.imagem FROM carrinho c INNER JOIN cicloprodutos p ON c.id_produto = p.id WHERE c.id_cliente = $idCliente");
+                if (!$resCarrinho || mysqli_num_rows($resCarrinho) == 0):
+            ?>
+                <p class="alert alert-warning">O seu carrinho está vazio.</p>
+                <a href="Index.php" class="btn btn-primary mt-2">Voltar às compras</a>
+            <?php else: ?>
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Preço</th>
+                                <th>Quantidade</th>
+                                <th>Subtotal</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $totalGeral = 0;
+                            while ($item = mysqli_fetch_assoc($resCarrinho)) {
+                                $subtotal = (float)$item['preco_venda'] * (int)$item['quantidade'];
+                                $totalGeral += $subtotal;
+                                echo "<tr>
+                                    <td>".htmlspecialchars($item['produto'])."</td>
+                                    <td>R$ ".number_format((float)$item['preco_venda'], 2, ',', '.')."</td>
+                                    <td>{$item['quantidade']}</td>
+                                    <td>R$ ".number_format($subtotal, 2, ',', '.')."</td>
+                                    <td><a href='carrinho.php?acao=remover&id={$item['id_produto']}' class='btn btn-danger btn-sm'>Remover</a></td>
+                                </tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
+                    <h4 class="fw-bold m-0">Total: R$ <?= number_format($totalGeral, 2, ',', '.') ?></h4>
+                    <a href="carrinho.php?acao=finalizar" class="btn btn-success btn-lg px-4">Finalizar Compra</a>
+                </div>
+            <?php endif; endif; ?>
+        </div>
+    </div>
 </main>
 
+<footer>© <?= date('Y') ?> CicloManos - Todos os direitos reservados.</footer>
 
-<footer>
-
-<p>
-© 2026 CicloManos - Todos os direitos reservados.
-</p>
-
-</footer>
-
-
+<script>
+function abrirProdutos() {
+    document.getElementById("caixa-produtos").classList.toggle("aberto");
+}
+document.addEventListener("click", function(event) {
+    const produtosMenu = document.querySelector(".produtos-menu");
+    const caixa = document.getElementById("caixa-produtos");
+    if (produtosMenu && caixa && !produtosMenu.contains(event.target)) {
+        caixa.classList.remove("aberto");
+    }
+});
+</script>
 </body>
-
 </html>

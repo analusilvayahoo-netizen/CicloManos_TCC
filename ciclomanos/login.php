@@ -175,7 +175,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $idDado = (int)$usuario['id_dado'];
 
-                    // Esta tela aceita somente contas cadastradas como clientes.
                     $qCliente = $pdo->prepare(
                         'SELECT id_cliente
                          FROM clientes
@@ -199,7 +198,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             ? 'Esta é uma conta de funcionário. Entre pelo acesso de funcionário.'
                             : 'Esta conta não está cadastrada como cliente.';
                     } else {
-                        // Atualiza somente os dados de autenticação; não limpa a sessão inteira nem o carrinho.
                         session_regenerate_id(true);
                         unset(
                             $_SESSION['tipo_usuario'],
@@ -213,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $_SESSION['email_usuario'] = $email;
                         $_SESSION['tipo_usuario'] = 'cliente';
 
-                        header('Location: index.php');
+                        header('Location: Index.php');
                         exit;
                     }
                 }
