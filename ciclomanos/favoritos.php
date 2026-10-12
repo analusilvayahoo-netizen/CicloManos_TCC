@@ -12,8 +12,8 @@ if (($_SESSION['tipo_usuario'] ?? '') !== 'cliente' || empty($_SESSION['id_clien
 $idCliente = (int) $_SESSION['id_cliente'];
 $acao = $_GET['acao'] ?? '';
 $idProd = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$ehFuncionario = (isset($_SESSION['tipo_usuario']) && in_array($_SESSION['tipo_usuario'], ['funcionario', 'admin'], true));
 
-// Adicionar Aos Favoritos compatível com a restrição uk_favorito_cliente_produto do SQL
 if ($acao === 'add' && $idProd > 0) {
     $stmtIns = mysqli_prepare($conn, "INSERT IGNORE INTO favoritos (id_cliente, id_produto) VALUES (?, ?)");
     if ($stmtIns) {
@@ -25,7 +25,6 @@ if ($acao === 'add' && $idProd > 0) {
     exit;
 }
 
-// Remover dos Favoritos
 if ($acao === 'remover' && $idProd > 0) {
     $stmtRem = mysqli_prepare($conn, "DELETE FROM favoritos WHERE id_cliente = ? AND id_produto = ?");
     if ($stmtRem) {
@@ -69,6 +68,7 @@ if ($acao === 'remover' && $idProd > 0) {
     </form>
     <div class="usuario">
         <a href="minha_conta.php">👤 Olá, <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Cliente', ENT_QUOTES, 'UTF-8') ?>!</a>
+        <a href="meus_pedidos.php">📦 Meus Pedidos</a>
         <a href="favoritos.php">⭐ Favoritos</a>
         <a href="carrinho.php">🛒 Carrinho</a>
         <a href="logout.php">🚪 Sair</a>
@@ -89,6 +89,13 @@ if ($acao === 'remover' && $idProd > 0) {
         <a href="ofertas.php">Ofertas</a>
     </nav>
 </div>
+
+<?php if ($ehFuncionario): ?>
+    <div style="background: #111; color: #fff; padding: 10px 20px; text-align: center; font-weight: bold; font-size: 14px; border-bottom: 1px solid #333;">
+        ⚙️ Você está navegando como funcionário. 
+        <a href="painel_funcionario.php" style="color: #4b86b4; text-decoration: underline; margin-left: 10px;">Voltar ao Painel do Funcionário →</a>
+    </div>
+<?php endif; ?>
 
 <main class="main-content">
     <div class="container">

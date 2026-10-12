@@ -3,6 +3,7 @@ session_start();
 include 'config.php';
 if (!isset($conn) && isset($conexao)) { $conn = $conexao; }
 if (!$conn) { die("Erro: Conexão com a base de dados não encontrada."); }
+$ehFuncionario = (isset($_SESSION['tipo_usuario']) && in_array($_SESSION['tipo_usuario'], ['funcionario', 'admin'], true));
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -37,10 +38,11 @@ if (!$conn) { die("Erro: Conexão com a base de dados não encontrada."); }
     <div class="usuario">
         <?php if (($_SESSION['tipo_usuario'] ?? '') === 'cliente'): ?>
             <a href="minha_conta.php">👤 Olá, <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Cliente') ?>!</a>
+            <a href="meus_pedidos.php">📦 Meus Pedidos</a>
             <a href="favoritos.php">⭐ Favoritos</a>
             <a href="carrinho.php">🛒 Carrinho</a>
             <a href="logout.php">🚪 Sair</a>
-        <?php elseif (in_array(($_SESSION['tipo_usuario'] ?? ''), ['funcionario', 'admin'], true)): ?>
+        <?php elseif ($ehFuncionario): ?>
             <a href="painel_funcionario.php">👤 <?= htmlspecialchars($_SESSION['nome_usuario']) ?></a>
             <a href="carrinho.php">🛒 Carrinho</a>
             <a href="logout.php">🚪 Sair</a>
@@ -65,6 +67,12 @@ if (!$conn) { die("Erro: Conexão com a base de dados não encontrada."); }
         <a href="ofertas.php">Ofertas</a>
     </nav>
 </div>
+<?php if ($ehFuncionario): ?>
+    <div style="background: #111; color: #fff; padding: 10px 20px; text-align: center; font-weight: bold; font-size: 14px; border-bottom: 1px solid #333;">
+        ⚙️ Você está navegando como funcionário. 
+        <a href="painel_funcionario.php" style="color: #4b86b4; text-decoration: underline; margin-left: 10px;">Voltar ao Painel do Funcionário →</a>
+    </div>
+<?php endif; ?>
 <main class="main-content">
     <div class="container mb-5">
         <div class="mb-4">

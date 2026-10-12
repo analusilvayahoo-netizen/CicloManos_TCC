@@ -45,6 +45,7 @@ $sql = "
 ";
 
 $lista = $conn->query($sql);
+$ehFuncionario = (isset($_SESSION['tipo_usuario']) && in_array($_SESSION['tipo_usuario'], ['funcionario', 'admin'], true));
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -59,18 +60,20 @@ $lista = $conn->query($sql);
         .ofertas-cm { width: min(1180px, calc(100% - 30px)); margin: 35px auto; flex: 1; }
         .ofertas-cm h1 { text-align: center; color: #315f83; margin-bottom: 8px; font-weight: bold; }
         .ofertas-intro { text-align: center; color: #687b8d; margin-bottom: 28px; }
-        .ofertas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 22px; }
-        .oferta-card { background: #fff; border: 1px solid #dbe3ea; border-radius: 13px; overflow: hidden; padding: 16px; box-shadow: 0 5px 18px rgba(26, 54, 79, .06); display: flex; flex-direction: column; gap: 10px; transition: 0.2s; }
-        .oferta-card:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(0,0,0,0.08); }
-        .oferta-card img { width: 100%; height: 180px; object-fit: contain; }
-        .oferta-card h2 { font-size: 1.05rem; margin: 0; color: #315f83; font-weight: bold; }
-        .oferta-card p { margin: 0; color: #617284; font-size: 13px; }
-        .preco-antigo { color: #7a8793; text-decoration: line-through; font-size: 13px; }
-        .preco-oferta { font-size: 1.3rem; color: #c12b35; font-weight: 800; }
-        .desconto { align-self: flex-start; background: #eaf4ff; color: #315f83; border-radius: 20px; padding: 4px 9px; font-size: .8rem; font-weight: bold; }
-        .oferta-card .btn-carrinho { display: block; text-align: center; background: #4A86B8; color: #fff; padding: 11px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: auto; }
-        .oferta-card .btn-carrinho:hover { background: #345f85; color: #fff; }
-        .sem-oferta { background: #f4f7fa; border-radius: 12px; padding: 30px; text-align: center; color: #687b8d; grid-column: 1 / -1; }
+        .ofertas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 24px; }
+        .oferta-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; padding: 18px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04); display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .oferta-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .oferta-card-img-link { display: block; text-align: center; position: relative; margin-bottom: 12px; }
+        .oferta-card img { width: 100%; height: 190px; object-fit: contain; }
+        .desconto { position: absolute; top: 0; left: 0; background: #eaf4ff; color: #315f83; border-radius: 20px; padding: 4px 10px; font-size: 0.75rem; font-weight: bold; }
+        .oferta-card h2 { font-size: 1rem; margin: 8px 0 6px; color: #222; font-weight: bold; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .oferta-card p { margin: 0 0 12px; color: #617284; font-size: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .container-precos { margin-top: auto; margin-bottom: 14px; }
+        .preco-antigo { color: #888; text-decoration: line-through; font-size: 12px; }
+        .preco-oferta { font-size: 1.25rem; color: #c12b35; font-weight: 800; line-height: 1.2; }
+        .oferta-card .btn-carrinho { display: block; text-align: center; background: #238549; color: #fff; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 13px; transition: background 0.2s; }
+        .oferta-card .btn-carrinho:hover { background: #1b6b3a; color: #fff; }
+        .sem-oferta { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 40px; text-align: center; color: #687b8d; grid-column: 1 / -1; font-size: 15px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
         footer { background: #111; color: #aaa; text-align: center; padding: 22px; font-size: 12px; margin-top: auto; width: 100%; }
     </style>
 </head>
@@ -92,10 +95,11 @@ $lista = $conn->query($sql);
     <div class="usuario">
         <?php if (($_SESSION['tipo_usuario'] ?? '') === 'cliente'): ?>
             <a href="minha_conta.php">👤 Olá, <?= e($_SESSION['nome_usuario'] ?? 'Cliente') ?>!</a>
+            <a href="meus_pedidos.php">📦 Meus Pedidos</a>
             <a href="favoritos.php">⭐ Favoritos</a>
             <a href="carrinho.php">🛒 Carrinho</a>
             <a href="logout.php">🚪 Sair</a>
-        <?php elseif (in_array(($_SESSION['tipo_usuario'] ?? ''), ['funcionario', 'admin'], true)): ?>
+        <?php elseif ($ehFuncionario): ?>
             <a href="painel_funcionario.php">👤 <?= e($_SESSION['nome_usuario'] ?? 'Funcionário') ?></a>
             <a href="carrinho.php">🛒 Carrinho</a>
             <a href="logout.php">🚪 Sair</a>
@@ -122,33 +126,47 @@ $lista = $conn->query($sql);
     </nav>
 </div>
 
+<?php if ($ehFuncionario): ?>
+    <div style="background: #111; color: #fff; padding: 10px 20px; text-align: center; font-weight: bold; font-size: 14px; border-bottom: 1px solid #333;">
+        ⚙️ Você está navegando como funcionário. 
+        <a href="painel_funcionario.php" style="color: #4b86b4; text-decoration: underline; margin-left: 10px;">Voltar ao Painel do Funcionário →</a>
+    </div>
+<?php endif; ?>
+
 <main class="ofertas-cm">
     <div class="mb-4">
         <a href="Index.php" class="btn btn-secondary">← Voltar para a página inicial</a>
     </div>
     <h1>Ofertas da CicloManos</h1>
-    <p class="ofertas-intro">Confira os produtos em promoção.</p>
+    <p class="ofertas-intro">Confira os produtos em promoção com descontos imperdíveis.</p>
 
     <div class="ofertas-grid">
         <?php if ($lista && $lista->num_rows): ?>
             <?php while ($p = $lista->fetch_assoc()): ?>
                 <article class="oferta-card">
-                    <a href="produtos.php?id=<?= (int)$p['id'] ?>" style="text-decoration:none; color:inherit;">
+                    <a href="produtos.php?id=<?= (int)$p['id'] ?>" class="oferta-card-img-link" style="text-decoration:none;">
                         <?php if (!empty($p['imagem'])): ?>
                             <img src="<?= e($p['imagem']) ?>" alt="<?= e($p['produto']) ?>" loading="lazy">
                         <?php endif; ?>
-                        <span class="desconto mt-2">-<?= number_format((float) $p['percentual_desconto'], 0, ',', '.') ?>%</span>
-                        <h2 class="mt-2"><?= e($p['produto']) ?></h2>
-                        <p class="mt-1"><?= e($p['descricao']) ?></p>
-                        <div class="preco-antigo mt-2">R$ <?= number_format((float) $p['preco_original'], 2, ',', '.') ?></div>
-                        <div class="preco-oferta">R$ <?= number_format((float) $p['preco_oferta'], 2, ',', '.') ?></div>
+                        <span class="desconto">-<?= number_format((float) $p['percentual_desconto'], 0, ',', '.') ?>%</span>
                     </a>
+                    
+                    <a href="produtos.php?id=<?= (int)$p['id'] ?>" style="text-decoration:none; color:inherit;">
+                        <h2><?= e($p['produto']) ?></h2>
+                        <p><?= e($p['descricao']) ?></p>
+                    </a>
+
+                    <div class="container-precos">
+                        <div class="preco-antigo">R$ <?= number_format((float) $p['preco_original'], 2, ',', '.') ?></div>
+                        <div class="preco-oferta">R$ <?= number_format((float) $p['preco_oferta'], 2, ',', '.') ?></div>
+                    </div>
+
                     <a class="btn-carrinho" href="carrinho.php?acao=add&id=<?= (int) $p['id'] ?>">🛒 Colocar no carrinho</a>
                 </article>
             <?php endwhile; ?>
         <?php else: ?>
             <div class="sem-oferta">
-                Ainda não há ofertas ativas. Volte em breve!
+                Ainda não há ofertas ativas no momento. Volte em breve!
             </div>
         <?php endif; ?>
     </div>

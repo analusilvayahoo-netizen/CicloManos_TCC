@@ -11,6 +11,9 @@ if (!isset($conn) || !$conn) {
 }
 
 $busca = trim($_GET['busca'] ?? '');
+
+// Verifica se o usuário logado é funcionário ou admin para exibir a barra de retorno
+$ehFuncionario = (isset($_SESSION['tipo_usuario']) && in_array($_SESSION['tipo_usuario'], ['funcionario', 'admin'], true));
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -29,7 +32,7 @@ $busca = trim($_GET['busca'] ?? '');
             text-align: center;
         }
         .banner-central img {
-            max-height: 200px; /* Aumentado para o banner ficar maior */
+            max-height: 200px;
             width: auto;
             object-fit: contain;
         }
@@ -106,10 +109,11 @@ $busca = trim($_GET['busca'] ?? '');
     <div class="usuario">
         <?php if (($_SESSION['tipo_usuario'] ?? '') === 'cliente'): ?>
             <a href="minha_conta.php">👤 Olá, <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Cliente', ENT_QUOTES, 'UTF-8') ?>!</a>
+            <a href="meus_pedidos.php">📦 Meus Pedidos</a>
             <a href="favoritos.php">⭐ Favoritos</a>
             <a href="carrinho.php">🛒 Carrinho</a>
             <a href="logout.php">🚪 Sair</a>
-        <?php elseif (in_array(($_SESSION['tipo_usuario'] ?? ''), ['funcionario', 'admin'], true)): ?>
+        <?php elseif ($ehFuncionario): ?>
             <a href="painel_funcionario.php">👤 <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Funcionário', ENT_QUOTES, 'UTF-8') ?></a>
             <a href="carrinho.php">🛒 Carrinho</a>
             <a href="logout.php">🚪 Sair</a>
@@ -135,6 +139,14 @@ $busca = trim($_GET['busca'] ?? '');
         <a href="ofertas.php">Ofertas</a>
     </nav>
 </div>
+
+<!-- Barra preta exclusiva para funcionários navegando no site -->
+<?php if ($ehFuncionario): ?>
+    <div style="background: #111; color: #fff; padding: 10px 20px; text-align: center; font-weight: bold; font-size: 14px; border-bottom: 1px solid #333;">
+        ⚙️ Você está navegando como funcionário. 
+        <a href="painel_funcionario.php" style="color: #4b86b4; text-decoration: underline; margin-left: 10px;">Voltar ao Painel do Funcionário →</a>
+    </div>
+<?php endif; ?>
 
 <!-- Banner centralizado e maior -->
 <section class="banner-central">

@@ -12,6 +12,7 @@ if (!$conn) {
 
 $codigo = '';
 $manutencao = null;
+$servicosManutencao = [];
 $mensagem = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -25,6 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     m.data_entrada,
                     m.entrega_estimada,
                     m.status,
+                    m.valor_total,
+                    m.forma_pagamento,
+                    m.status_pagamento,
                     dp.nome AS nome_cliente
                 FROM manutencao AS m
                 INNER JOIN clientes AS c
@@ -36,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare($sql);
 
         if (!$stmt) {
-            $mensagem = 'Não foi possível consultar a manutenção. Verifique se a coluna status foi criada no banco.';
+            $mensagem = 'Não foi possível consultar a manutenção.';
         } else {
             $idManutencao = (int) $codigo;
             $stmt->bind_param('i', $idManutencao);
@@ -46,6 +50,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (!$manutencao) {
                 $mensagem = 'Nenhuma manutenção foi encontrada para esse código.';
+            } else {
+                // Buscar os serviços associados a esta ordem de manutenção
+                $sqlServ = 'SELECT s.nome_servico, sm.valor_unitario 
+                            FROM servico_manutencao AS sm 
+                            INNER JOIN servicos AS s ON sm.id_servico = s.id_servico 
+                            WHERE sm.id_manutencao = ?';
+                $stmtServ = $conn->prepare($sqlServ);
+                if ($stmtServ) {
+                    $stmtServ->bind_param('i', $idManutencao);
+                    $stmtServ->execute();
+                    $resServ = $stmtServ->get_result();
+                    while ($rowServ = $resServ->fetch_assoc()) {
+                        $servicosManutencao[] = $rowServ;
+                    }
+                    $stmtServ->close();
+                }
             }
         }
     }
@@ -82,7 +102,7 @@ function formatarData($data) {
     <style>
         body { font-family: Arial, sans-serif; background: #f7f7f7; color: #222; min-height: 100vh; display: flex; flex-direction: column; }
         .main-content { flex: 1; padding: 30px 0; }
-        .manutencao-container { max-width: 700px; margin: 0 auto; }
+        .manutencao-container { max-width: 750px; margin: 0 auto; }
         .rastreio-card { background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); }
         .rastreio-form { display: flex; gap: 10px; justify-content: center; margin-top: 15px; flex-wrap: wrap; }
         .rastreio-form input { padding: 10px 14px; border: 1px solid #ccc; border-radius: 8px; width: 260px; font-size: 14px; }
@@ -91,6 +111,8 @@ function formatarData($data) {
         .etapas-manutencao { display: flex; justify-content: space-between; margin-top: 25px; gap: 10px; flex-wrap: wrap; }
         .etapa-manutencao { flex: 1; background: #e9ecef; color: #6c757d; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: bold; text-align: center; }
         .etapa-manutencao.ativa { background: #28a745; color: #fff; }
+        .badge-pago { background: #28a745; color: white; padding: 3px 8px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .badge-pendente { background: #ffc107; color: #333; padding: 3px 8px; border-radius: 20px; font-size: 12px; font-weight: bold; }
         footer { background: #111; color: #aaa; text-align: center; padding: 22px; font-size: 12px; margin-top: auto; width: 100%; }
     </style>
 </head>
@@ -112,11 +134,13 @@ function formatarData($data) {
     <div class="usuario">
         <?php if (($_SESSION['tipo_usuario'] ?? '') === 'cliente'): ?>
             <a href="minha_conta.php">👤 Olá, <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Cliente', ENT_QUOTES, 'UTF-8') ?>!</a>
+            <a href="meus_pedidos.php">📦 Meus Pedidos</a>
             <a href="favoritos.php">⭐ Favoritos</a>
             <a href="carrinho.php">🛒 Carrinho</a>
             <a href="logout.php">🚪 Sair</a>
         <?php elseif (in_array(($_SESSION['tipo_usuario'] ?? ''), ['funcionario', 'admin'], true)): ?>
             <a href="painel_funcionario.php">👤 <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Funcionário', ENT_QUOTES, 'UTF-8') ?></a>
+            <a href="meus_pedidos.php">📦 Meus Pedidos</a>
             <a href="carrinho.php">🛒 Carrinho</a>
             <a href="logout.php">🚪 Sair</a>
         <?php else: ?>
@@ -151,9 +175,9 @@ function formatarData($data) {
 
         <div class="manutencao-container">
             <div class="rastreio-card text-center">
-                <p class="mb-2">Digite o código da sua manutenção:</p>
+                <p class="mb-2">Digite o código da sua manutenção (Ordem de Serviço):</p>
                 <form method="post" action="manutencao.php" class="rastreio-form">
-                    <input type="text" id="codigo" name="codigo" value="<?= e($codigo) ?>" inputmode="numeric" placeholder="Código da manutenção" required>
+                    <input type="text" id="codigo" name="codigo" value="<?= e($codigo) ?>" inputmode="numeric" placeholder="Ex: 1, 2, 3..." required>
                     <button type="submit">Acompanhar</button>
                 </form>
 
@@ -163,12 +187,44 @@ function formatarData($data) {
 
                 <?php if ($manutencao): ?>
                     <section class="status-manutencao mt-4 text-start bg-light p-4 rounded border">
-                        <h3 class="fw-bold fs-5 mb-3">Status da bicicleta: <?= e(ucwords(str_replace('_', ' ', $manutencao['status']))) ?></h3>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="fw-bold fs-5 m-0">OS #<?= e($manutencao['id_manutencao']) ?> - Status: <?= e(ucwords(str_replace('_', ' ', $manutencao['status']))) ?></h3>
+                            <?php 
+                                $stPag = $manutencao['status_pagamento'] ?? 'pendente';
+                                $classePag = ($stPag === 'pago') ? 'badge-pago' : 'badge-pendente';
+                            ?>
+                            <span class="<?= $classePag ?>">Pagamento: <?= ucfirst($stPag) ?></span>
+                        </div>
+
                         <p class="detalhes-manutencao mb-3">
                             Cliente: <strong><?= e($manutencao['nome_cliente']) ?></strong><br>
-                            Entrada: <?= formatarData($manutencao['data_entrada']) ?><br>
-                            Entrega estimada: <?= formatarData($manutencao['entrega_estimada']) ?>
+                            Data de Entrada: <?= formatarData($manutencao['data_entrada']) ?><br>
+                            Previsão de Entrega: <?= formatarData($manutencao['entrega_estimada']) ?><br>
+                            Forma de Pagamento: <strong><?= e($manutencao['forma_pagamento'] ?? 'Dinheiro / PIX') ?></strong>
                         </p>
+
+                        <!-- Listagem dos Serviços Realizados -->
+                        <div class="mb-3">
+                            <h6 class="fw-bold text-secondary">Serviços Executados na Bicicleta:</h6>
+                            <ul class="list-group list-group-flush bg-white rounded border">
+                                <?php if (!empty($servicosManutencao)): ?>
+                                    <?php foreach ($servicosManutencao as $serv): ?>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+                                            <span><?= e($serv['nome_servico']) ?></span>
+                                            <span class="fw-semibold">R$ <?= number_format((float)$serv['valor_unitario'], 2, ',', '.') ?></span>
+                                        </li>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <li class="list-group-item text-muted py-2">Nenhum serviço específico vinculado.</li>
+                                <?php endif; ?>
+                            </ul>
+                        </div>
+
+                        <div class="text-end mb-3">
+                            <span class="text-muted">Valor Total da Manutenção:</span>
+                            <span class="fs-5 fw-bold text-danger">R$ <?= number_format((float)($manutencao['valor_total'] ?? 0), 2, ',', '.') ?></span>
+                        </div>
+
                         <div class="etapas-manutencao">
                             <div class="etapa-manutencao <?= $etapaAtual >= 1 ? 'ativa' : '' ?>">Recebida</div>
                             <div class="etapa-manutencao <?= $etapaAtual >= 2 ? 'ativa' : '' ?>">Em análise</div>

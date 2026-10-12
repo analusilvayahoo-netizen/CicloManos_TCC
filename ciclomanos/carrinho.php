@@ -12,8 +12,8 @@ if (($_SESSION['tipo_usuario'] ?? '') !== 'cliente' || empty($_SESSION['id_clien
 $idCliente = (int) $_SESSION['id_cliente'];
 $acao = $_GET['acao'] ?? '';
 $idProd = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$ehFuncionario = (isset($_SESSION['tipo_usuario']) && in_array($_SESSION['tipo_usuario'], ['funcionario', 'admin'], true));
 
-// Adicionar ao Carrinho compatível com a restrição uk_carrinho_cliente_produto do SQL
 if ($acao === 'add' && $idProd > 0) {
     $stmt = mysqli_prepare($conn, "INSERT INTO carrinho (id_cliente, id_produto, quantidade) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE quantidade = quantidade + 1");
     if ($stmt) {
@@ -25,7 +25,6 @@ if ($acao === 'add' && $idProd > 0) {
     exit;
 }
 
-// Remover do Carrinho
 if ($acao === 'remover' && $idProd > 0) {
     $stmtRem = mysqli_prepare($conn, "DELETE FROM carrinho WHERE id_cliente = ? AND id_produto = ?");
     if ($stmtRem) {
@@ -37,21 +36,36 @@ if ($acao === 'remover' && $idProd > 0) {
     exit;
 }
 
-// Finalizar Compra
+// Finalizar Compra e registrar na tabela vendas e itens_venda
 if ($acao === 'finalizar') {
-    $resItens = mysqli_query($conn, "SELECT c.quantidade, p.preco_venda FROM carrinho c INNER JOIN cicloprodutos p ON c.id_produto = p.id WHERE c.id_cliente = $idCliente");
+    $resItens = mysqli_query($conn, "SELECT c.id_produto, c.quantidade, p.preco_venda FROM carrinho c INNER JOIN cicloprodutos p ON c.id_produto = p.id WHERE c.id_cliente = $idCliente");
     $totalVenda = 0;
+    $itensCarrinho = [];
     while ($item = mysqli_fetch_assoc($resItens)) {
         $totalVenda += ((float)$item['preco_venda'] * (int)$item['quantidade']);
+        $itensCarrinho[] = $item;
     }
 
     if ($totalVenda > 0) {
-        $stmtVenda = mysqli_prepare($conn, "INSERT INTO vendas (id_cliente, data, valor_total, status_pagamento) VALUES (?, NOW(), ?, 'pago')");
+        // Insere a venda principal
+        $stmtVenda = mysqli_prepare($conn, "INSERT INTO vendas (id_cliente, data, valor_total, forma_pagamento, status_pagamento, data_pagamento) VALUES (?, NOW(), ?, 'Cartão / PIX', 'aprovado', NOW())");
         if ($stmtVenda) {
             mysqli_stmt_bind_param($stmtVenda, 'id', $idCliente, $totalVenda);
             mysqli_stmt_execute($stmtVenda);
+            $idNovaVenda = mysqli_insert_id($conn);
             mysqli_stmt_close($stmtVenda);
+
+            // Insere cada produto na tabela itens_venda
+            foreach ($itensCarrinho as $it) {
+                $stmtItem = mysqli_prepare($conn, "INSERT INTO itens_venda (id_venda, id, quantidade, valor_unitario) VALUES (?, ?, ?, ?)");
+                if ($stmtItem) {
+                    mysqli_stmt_bind_param($stmtItem, 'iiid', $idNovaVenda, $it['id_produto'], $it['quantidade'], $it['preco_venda']);
+                    mysqli_stmt_execute($stmtItem);
+                    mysqli_stmt_close($stmtItem);
+                }
+            }
         }
+        // Limpa o carrinho
         mysqli_query($conn, "DELETE FROM carrinho WHERE id_cliente = $idCliente");
         $mensagemSucesso = "Compra efetuada com sucesso!";
     }
@@ -88,6 +102,7 @@ if ($acao === 'finalizar') {
     </form>
     <div class="usuario">
         <a href="minha_conta.php">👤 Olá, <?= htmlspecialchars($_SESSION['nome_usuario'] ?? 'Cliente', ENT_QUOTES, 'UTF-8') ?>!</a>
+        <a href="meus_pedidos.php">📦 Meus Pedidos</a>
         <a href="favoritos.php">⭐ Favoritos</a>
         <a href="carrinho.php">🛒 Carrinho</a>
         <a href="logout.php">🚪 Sair</a>
@@ -109,6 +124,13 @@ if ($acao === 'finalizar') {
     </nav>
 </div>
 
+<?php if ($ehFuncionario): ?>
+    <div style="background: #111; color: #fff; padding: 10px 20px; text-align: center; font-weight: bold; font-size: 14px; border-bottom: 1px solid #333;">
+        ⚙️ Você está navegando como funcionário. 
+        <a href="painel_funcionario.php" style="color: #4b86b4; text-decoration: underline; margin-left: 10px;">Voltar ao Painel do Funcionário →</a>
+    </div>
+<?php endif; ?>
+
 <main class="main-content">
     <div class="container">
         <div class="mb-4">
@@ -119,7 +141,10 @@ if ($acao === 'finalizar') {
             
             <?php if (isset($mensagemSucesso)): ?>
                 <div class="alert alert-success"><h3><?= $mensagemSucesso ?></h3></div>
-                <a href="Index.php" class="btn btn-primary mt-2">Continuar comprando</a>
+                <div class="d-flex gap-2 mt-3">
+                    <a href="meus_pedidos.php" class="btn btn-dark">Ver Meus Pedidos</a>
+                    <a href="Index.php" class="btn btn-primary">Continuar comprando</a>
+                </div>
             <?php else: 
                 $resCarrinho = mysqli_query($conn, "SELECT c.id_produto, c.quantidade, p.produto, p.preco_venda, p.imagem FROM carrinho c INNER JOIN cicloprodutos p ON c.id_produto = p.id WHERE c.id_cliente = $idCliente");
                 if (!$resCarrinho || mysqli_num_rows($resCarrinho) == 0):

@@ -23,15 +23,12 @@ function e($valor): string {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body.admin-cm { min-height: 100vh; background: #f7f7f7; color: #222; display: flex; flex-direction: column; font-family: Arial, Helvetica, sans-serif; }
-        
-        /* Topo azul com o nome/título e dados do funcionário */
         .cm-admin-topo { background: #4b86b4; color: #fff; padding: 18px 6%; min-height: 75px; display: flex; align-items: center; justify-content: space-between; }
         .cm-admin-logo { color: #fff; text-decoration: none; font-size: 24px; font-weight: 700; }
         .cm-admin-logo:hover { color: #fff; text-decoration: none; }
         .cm-admin-user { display: flex; align-items: center; gap: 15px; }
         .cm-admin-user span { text-align: right; font-size: 14px; color: #f2f2f2; }
         .cm-admin-user span strong { display: block; margin-bottom: 2px; color: #fff; }
-        
         .cm-admin-main { width: 92%; max-width: 1180px; margin: 45px auto 60px; flex: 1; }
         .cm-admin-titulo { margin-bottom: 28px; }
         .cm-admin-titulo h1 { font-size: 32px; font-weight: 700; color: #171717; margin-bottom: 8px; }
@@ -44,13 +41,10 @@ function e($valor): string {
         .cm-admin-card h2 { font-size: 18px; margin-bottom: 8px; color: #181818; font-weight: bold; }
         .cm-admin-card p { color: #777; font-size: 13px; line-height: 1.5; }
         .cm-rodape { background: #111; color: #aaa; text-align: center; padding: 22px; font-size: 12px; margin-top: auto; width: 100%; }
-        
         .cm-btn-sair { padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; background: #fff; color: #4b86b4; border: none; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
         .cm-btn-sair:hover { background: #f2f2f2; color: #3b6c95; }
-        
         .cm-btn-cadastrar { padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; background: #f1f1f1; color: #333; border: 1px solid #ddd; display: inline-flex; align-items: center; justify-content: center; transition: 0.2s; }
         .cm-btn-cadastrar:hover { background: #e5e5e5; color: #333; }
-
         @media(max-width: 900px) { .cm-admin-grid { grid-template-columns: repeat(2, 1fr); } }
         @media(max-width: 650px) { .cm-admin-grid { grid-template-columns: 1fr; } .cm-admin-topo { flex-direction: column; gap: 15px; text-align: center; } .cm-admin-user { flex-direction: column; } .cm-admin-user span { text-align: center; } }
     </style>
@@ -109,7 +103,8 @@ function e($valor): string {
                 <p>Criar, editar, ativar e desativar promoções da loja.</p>
             </a>
 
-            <a class="cm-admin-card" href="Index.php" target="_blank" rel="noopener">
+            <!-- Ao clicar aqui, vai direto para a tela inicial do site -->
+            <a class="cm-admin-card" href="Index.php">
                 <div class="emoji">🛍️</div>
                 <h2>Visualizar produtos na loja</h2>
                 <p>Abrir a loja e navegar pelo catálogo.</p>
